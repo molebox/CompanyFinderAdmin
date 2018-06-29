@@ -1,0 +1,33 @@
+﻿@model AddSkillsViewModel
+
+<div class="standardBackground allPagesBackground">
+    <div class="container">
+        @if (TempData["editSkillMessage"] != null)
+        {
+            <div class="container">
+                <div class="alert alert-success alert-dismissable text-center">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @TempData["editSkillMessage"]
+                </div>
+            </div>
+
+        }
+        <div class="card ">
+            <h4 class="card-header text-center">Edit Skill</h4>
+            <div class="card-block">
+                <form asp-action="EditSkill" asp-controller="Admin" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="SkillName" class="control-label"></label>
+                        <input asp-for="SkillName" class="form-control no-border" />
+                        <span asp-validation-for="SkillName" class="text-danger"></span>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" value="Edit Skill" class="btn btn-primary btn-raise " />
+                        <a asp-action="Dashboard" class="btn btn-danger btn-raise">Go Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+﻿@model TemplateLoginViewModel
+
+<div class="stage">
+    <div class="stage-caption">
+        <h1 class="display-2">Company Template</h1>
+        <hr />
+        @*<h6>Please login to view the template</h6>*@
+        <div>
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <form class="form-inline" asp-action="TemplateLogin" asp-controller="Template" method="post" style="border-radius:5px;">
+
+                <input type="text" asp-for="CompanyAccessName" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Name">
+
+                <input type="password" asp-for="CompanyAccessPassword" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Password">
+
+                <input type="submit" value="Login" class="btn btn-primary" style="border-radius:5px;" />
+            </form>
+        </div>
+    </div>
+</div>
+

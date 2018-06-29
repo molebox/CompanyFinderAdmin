@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+@inject IHtmlLocalizer<SharedResource> SharedHtmlLocalizer
+@using CompanyFinderAdmin
+
+@*<div class="allPagesBackground">*@
+<div class="standardBackground allPagesBackground">
+    <div class="container">
+
+        <div class="card-columns">
+            <a asp-controller="Admin" asp-action="CreateCompany">
+                <div class="card btn-raise card-raise">
+                    <div class="card-block">
+                        <h4 class="card-title">@SharedLocalizer["Create a new company"]</h4>
+                        <p class="card-text">@SharedLocalizer["Fill in the companies details and save it to the database"]</p>
+                    </div>
+                </div>
+            </a>
+
+            <a asp-controller="Template" asp-action="TemplateStatus">
+                <div class="card btn-raise card-raise">
+                    <div class="card-block">
+                        <h4 class="card-title">@SharedLocalizer["View template status"]</h4>
+                        <p class="card-text">@SharedLocalizer["Check on the status of and send company templates"]</p>
+                    </div>
+                </div>
+            </a>
+
+            <a asp-controller="Admin" asp-action="CompanyIndex">
+                <div class="card btn-raise card-raise">
+                    <div class="card-block">
+                        <h4 class="card-title">@SharedLocalizer["View all companies in the database"]</h4>
+                        <p class="card-text">@SharedLocalizer["View all the companies saved to the database and choose to edit or delete them"]</p>
+                    </div>
+                </div>
+            </a>
+
+            <a asp-controller="Admin" asp-action="CreateTreeNodes">
+                <div class="card btn-raise card-raise">
+                    <div class="card-block">
+                        <h4 class="card-title">@SharedLocalizer["Create TreeNodes"]</h4>
+                        <p class="card-text">@SharedLocalizer["Create all skills and details as a tree view for an easy overview of the database structure"]</p>
+                    </div>
+                </div>
+            </a>
+
+            <a asp-controller="Admin" asp-action="MainAppHomePage">
+                <div class="card btn-raise card-raise">
+                    <div class="card-block">
+                        <h4 class="card-title">@SharedLocalizer["Edit the home page"]</h4>
+                        <p class="card-text">@SharedLocalizer["Edit the home page tagline"]</p>
+                    </div>
+                </div>
+            </a>
+
+            <a asp-controller="Admin" asp-action="IndustryFilter">
+                <div class="card btn-raise card-inverse card-danger card-raise">
+                    <div class="card-block text-center">
+                        <h4 class="card-title">@SharedLocalizer["Back to industry filter"]</h4>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+</div>
+
+
+@*</div>*@

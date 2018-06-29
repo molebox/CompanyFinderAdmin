@@ -1,0 +1,184 @@
+﻿html,
+body {
+    height: 100%;
+    /*overflow-x: hidden;*/
+}
+
+/* Create two unequal columns that floats next to each other */
+.column {
+    float: left;
+    padding: 10px;
+    height: 300px; /* Should be removed. Only for demonstration */
+}
+
+.left {
+    width: 75%;
+}
+
+.right {
+    width: 25%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    /*padding-left: 15px;
+    padding-right: 15px;*/
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    background: url("../images/organized-workspace_4460x4460.jpg") center center no-repeat;
+   
+    -ms-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    color: white;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    -ms-align-items: center;
+    -o-align-items: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.stage-caption {
+    /*opacity:1;*/
+    font-size: 1.4rem;
+    font-weight: bold;
+    max-width: 70rem;
+    margin: 0 auto 15em;
+    text-align: center;
+ 
+}
+
+    .stage-caption h1 {
+        color: black;
+    }
+
+.standardBackground {
+    /*color: white;*/
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.standard-container {
+    font-size: 1.4rem;
+    font-weight: bold;
+    /*max-width: 70rem;*/
+    margin: 0 auto;
+    text-align: center;
+}
+    .standard-container h5 {
+        color: black;
+    }
+
+
+#feature-one {
+    /*background: #e8e8e8;*/
+    height: 100%;
+}
+
+a {
+    text-decoration:none;
+}
+
+.card-raise:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.allPagesBackground {
+    background: #e8e8e8;
+}
+
+.btn-raise {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.create-wrapper{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    grid-gap:1em;
+    grid-auto-rows:minmax(75px, auto);
+}
+
+.createNodes-wrapper > div{
+    /*background:#eee;*/
+    padding:1em;
+}
+.createNodes-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em;
+    grid-auto-rows: minmax(75px, auto);
+}
+
+    .create-wrapper > div {
+        /*background:#eee;*/
+        padding: 1em;
+    }
+
+/*.create-wrapper > div:nth-child(odd){
+    /*background:#ddd;*/
+/*}*/
+
+.skilldetailfocusWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1em;
+    g/*rid-auto-rows: minmax(100px, auto);*/
+}
+.skilldetailfocusWrapper > div {
+    padding: 1em;
+}
+
+.template-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1em;
+    grid-auto-rows: minmax(100px, auto);
+}
+    .template-wrapper > div {
+        padding: 1em;
+    }
+
+.template-nested {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.template-nested > div{
+    padding:1em;
+}
+
+.createTreeNodesWrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em;
+    grid-auto-rows: minmax(100px, auto);
+}
+
+.footerVersion {
+    position: fixed;
+    padding-left: 10px;
+    margin: 0px;
+    bottom: 0;
+    font-size: 10px;
+}
+
+.langBtn{
+    font-size: 1.5em;
+    padding:0.25em;
+}

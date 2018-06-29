@@ -1,0 +1,270 @@
+﻿@model CreateTemplateData
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/themes/proton/style.min.css" />
+</head>
+<div style="margin:2em;">
+    <form id="templateForm">
+        <div class="create-wrapper">
+            <div class="card">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="@Model.UniqueUrl" type="hidden" value="@Model.UniqueUrl" id="companyUniqueId" />
+                <div class="form-group">
+                    <label asp-for="CompanyName" class="control-label"></label>
+                    <input asp-for="CompanyName" class="form-control" id="companyName" />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ContactPerson" class="control-label"></label>
+                    <input asp-for="ContactPerson" class="form-control" id="companyContact" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" id="companyEmail" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Website" class="control-label"></label>
+                    <input asp-for="Website" class="form-control" id="companyWebsite" />
+                    <span asp-validation-for="Website" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RecruitmentWebAddress" class="control-label"></label>
+                    <input asp-for="RecruitmentWebAddress" class="form-control" id="companyRecruitment" />
+                    <small class="form-text text-muted">Provide the link to your recuitment page</small>
+                    <span asp-validation-for="RecruitmentWebAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Bio" class="control-label"></label>
+                    <textarea asp-for="Bio" maxlength="1000" class="form-control" rows="4" id="companyBio"></textarea>
+                    <small class="form-text text-muted">Describe your company using no more than 1000 characters</small>
+                    <span asp-validation-for="Bio" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input asp-for="Phone" class="form-control" id="companyPhone" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OtherNotes" class="control-label"></label>
+                    <textarea asp-for="OtherNotes" maxlength="1000" class="form-control" rows="2" id="otherNotes"></textarea>
+                    <small id="bioHelp" class="form-text text-muted">Use no more than 1000 characters</small>
+                    <span asp-validation-for="OtherNotes" class="text-danger"></span>
+                </div>
+            </div>
+
+                <div class="card">
+                    <div id="tree_roles"></div>
+                </div>
+                    <div class="card">
+                        <div id="tree_focus"></div>
+                    </div>
+        </div>
+        <div class="form-group text-center">
+            <input type="submit" value="Submit template" id="submitBtn" class="btn btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0" />
+            <input type="submit" value="Save as draft" id="draftBtn" class="btn btn-info btn-raise mb-2 mr-sm-2 mb-sm-0" />
+            <input type="button" onclick="resetForm()" value="Undo changes" class="btn btn-danger btn-raise mb-2 mr-sm-2 mb-sm-0" />
+            <hr />
+        </div>
+        @if (TempData["templateMessage"] != null)
+        {
+            <div class="container">
+                <div class="alert alert-success alert-dismissable text-center">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @TempData["templateMessage"]
+                </div>
+            </div>
+        }
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script>
+    function resetForm() {
+        document.getElementById("templateForm").reset();
+    }
+
+    $(document).ready(function () {
+
+        $('#tree_roles').jstree({
+            'plugins': ['contextmenu', 'unique', 'checkbox'],
+            'core': {
+                "check_callback": true,
+                'data': {
+                    "type": "GET",
+                    "url": "/Template/GetTreeNodes",
+                    "dataType": "json" // needed only if you do not supply JSON headers
+                },
+                'checkbox': {
+                    'three_state': false,
+                    'cascade': 'up'
+                },
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                }
+            }
+        });
+        $('#tree_focus').jstree({
+            'plugins': ['contextmenu', 'unique', 'checkbox'],
+            'core': {
+                "check_callback": true,
+                'data': {
+                    "type": "GET",
+                    "url": "/Template/GetFocusNodesAsync",
+                    "dataType": "json" // needed only if you do not supply JSON headers
+                },
+                'checkbox': {
+                    'three_state': false,
+                    'cascade': 'up'
+                },
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                }
+            }
+        });
+
+        $('#submitBtn').click(function (e) {
+
+            //Get the input values
+            var compName = $("#companyName").val();
+            var compContact = $("#companyContact").val();
+            var compEmail = $("#companyEmail").val();
+            var compBio = $("#companyBio").val();
+            var compWebsite = $("#companyWebsite").val();
+            var compPhone = $("#companyPhone").val();
+            var compRecruitment = $('#companyRecruitment').val();
+            var compOtherNotes = $('#otherNotes').val();
+            var uniqueId = $('#companyUniqueId').val();
+
+            //Get the checked checkbox ids
+            var rolesCheckbox_ids = $('#tree_roles').jstree(true).get_selected();
+            //Get the checked checkbox ids
+            var focusCheckbox_ids = $('#tree_focus').jstree(true).get_selected();
+            console.log(focusCheckbox_ids);
+
+            //Get the intermediate state checkboxes - the skills if only children are selected
+            $("#tree_roles").find(".jstree-undetermined").each(function (i, element) {
+
+                var id = $(element).closest('.jstree-node').attr("id");
+                rolesCheckbox_ids.push(id);
+            });
+
+            //Create the object to send
+            var CreateTemplateData = {
+
+                CompanyName: compName,
+                ContactPerson: compContact,
+                Email: compEmail,
+                Bio: compBio,
+                Website: compWebsite,
+                Phone: compPhone,
+                RecruitmentWebAddress: compRecruitment,
+                OtherNotes: compOtherNotes,
+                UniqueUrl: uniqueId,
+                CheckedRolesNodes: rolesCheckbox_ids,
+                CheckedFocusNodes: focusCheckbox_ids
+            };
+
+            e.preventDefault();
+
+            //Send the array to the server
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/Template/SubmittedCompanyTemplate",
+                //contentType: "application/json",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(CreateTemplateData),
+                success: (function (data) {
+                    console.log(data);
+                    $('#saved').hide().fadeIn(1000);
+
+                }),
+                error: function () {
+
+                }
+            });
+        });
+
+        $('#draftBtn').click(function (e) {
+
+            //Get the input values
+            var compName = $("#companyName").val();
+            var compContact = $("#companyContact").val();
+            var compEmail = $("#companyEmail").val();
+            var compBio = $("#companyBio").val();
+            var compWebsite = $("#companyWebsite").val();
+            var compPhone = $("#companyPhone").val();
+            var compRecruitment = $('#companyRecruitment').val();
+            var compOtherNotes = $('#otherNotes').val();
+            var uniqueId = $('#companyUniqueId').val();
+
+            //Get the checked checkbox ids
+            var rolesCheckbox_ids = $('#tree_roles').jstree(true).get_selected();
+            //Get the checked checkbox ids
+            var focusCheckbox_ids = $('#tree_focus').jstree(true).get_selected();
+            console.log(focusCheckbox_ids);
+
+            //Get the intermediate state checkboxes - the skills if only children are selected
+            $("#tree_roles").find(".jstree-undetermined").each(function (i, element) {
+
+                var id = $(element).closest('.jstree-node').attr("id");
+                rolesCheckbox_ids.push(id);
+            });
+
+            //Create the object to send
+            var CreateTemplateData = {
+
+                CompanyName: compName,
+                ContactPerson: compContact,
+                Email: compEmail,
+                Bio: compBio,
+                Website: compWebsite,
+                Phone: compPhone,
+                RecruitmentWebAddress: compRecruitment,
+                OtherNotes: compOtherNotes,
+                UniqueUrl: uniqueId,
+                CheckedRolesNodes: rolesCheckbox_ids,
+                CheckedFocusNodes: focusCheckbox_ids
+            };
+
+            e.preventDefault();
+
+            //Send the array to the server
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/Template/DraftCompanyTemplate",
+                //contentType: "application/json",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(CreateTemplateData),
+                success: (function (data) {
+                    console.log(data);
+                    $('#saved').hide().fadeIn(1000);
+
+                }),
+                error: function () {
+
+                }
+            });
+        });
+    });
+
+</script>
+
+
+
+
+

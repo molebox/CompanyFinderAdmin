@@ -1,0 +1,155 @@
+﻿@model SkillsDetailsFocusListViewModel
+@*<h1 class="display-4 text-center">Pick a skill, detail or focus to edit or delete</h1>
+
+    <br />*@
+<div class="allPagesBackground" style="height:100%;">
+
+    <div class="skilldetailfocusWrapper searchFilter" style="padding:2em;">
+        <div class="card">
+
+            <div class="card-header text-center infoFont" id="roles">Skills</div>
+            <div class="form-group" style="padding:1em;">
+                <div class="input-group">
+                    <input type="text" id="SearchSkill" placeholder="Search Skills" class="form-control" />
+                </div>
+            </div>
+            <div class="card-block">
+                <table class="table table-hover table-responsive">
+                    @foreach (var item in Model.SkillSets)
+                    {
+                        <tr class="SearchSkill">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SkillName)
+                            </td>
+                            <td></td>
+                            <td>
+                                <a asp-action="EditSkill" asp-controller="Admin" asp-route-id="@item.SkillId" class="btn btn-primary btn-sm">Edit</a>
+                                <a asp-action="DeleteSkill" asp-controller="Admin" asp-route-id="@item.SkillId" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+
+        </div>
+        <div class="card">
+
+            <div class="card-header text-center infoFont">Details</div>
+            <div class="form-group" style="padding:1em;">
+                <div class="input-group">
+                    <input type="text" id="SearchDetail" placeholder="Search Details" class="form-control" />
+                </div>
+            </div>
+            <div class="card-block">
+                <table class="table table-hover table-responsive">
+                    @foreach (var item in Model.SkillDetails)
+                    {
+                        <tr class="SearchDetail">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DetailName)
+                            </td>
+                            <td>
+                                <a asp-action="EditDetail" asp-controller="Admin" asp-route-id="@item.SkillDetailId" class="btn btn-primary btn-sm">Edit</a>
+                                <a asp-action="DeleteDetail" asp-controller="Admin" asp-route-id="@item.SkillDetailId" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+        </div>
+        <div class="card">
+            <div class="card-header text-center infoFont">Focus</div>
+            <div class="form-group" style="padding:1em;">
+                <div class="input-group">
+                    <input type="text" id="SearchFocus" placeholder="Search Focuses" class="form-control" />
+                </div>
+            </div>
+            <div class="card-block">
+                <table class="table table-hover table-responsive">
+                    @foreach (var item in Model.Focuses)
+                    {
+                        <tr class="SearchFocus">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FocusType)
+                            </td>
+                            <td>
+                                <a asp-action="EditFocus" asp-controller="Admin" asp-route-id="@item.FocusId" class="btn btn-primary btn-sm">Edit</a>
+                                <a asp-action="DeleteFocus" asp-controller="Admin" asp-route-id="@item.FocusId" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="container">
+        <a asp-action="Dashboard" class="btn btn-danger btn-raise btn-block">Go Back</a>
+    </div>
+   
+
+</div>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        function Contains(text_one, text_two) {
+            if (text_one.indexOf(text_two) != -1)
+                return true;
+        }
+
+        $("#SearchSkill").keyup(function () {
+            var searchText = $("#SearchSkill").val().toLowerCase();
+            $(".SearchSkill").each(function () {
+                if (!Contains($(this).text().toLowerCase(), searchText)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+        });
+
+        function Contains(text_one, text_two) {
+            if (text_one.indexOf(text_two) != -1)
+                return true;
+        }
+
+        $("#SearchDetail").keyup(function () {
+            var searchText = $("#SearchDetail").val().toLowerCase();
+            $(".SearchDetail").each(function () {
+                if (!Contains($(this).text().toLowerCase(), searchText)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+        });
+
+        $("#SearchFocus").keyup(function () {
+            var searchText = $("#SearchFocus").val().toLowerCase();
+            $(".SearchFocus").each(function () {
+                if (!Contains($(this).text().toLowerCase(), searchText)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+        });
+
+    });
+
+</script>
+
+

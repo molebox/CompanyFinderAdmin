@@ -1,0 +1,41 @@
+﻿@model TagLineViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+@inject IHtmlLocalizer<SharedResource> SharedHtmlLocalizer
+@using CompanyFinderAdmin
+
+<div class="standardBackground allPagesBackground">
+
+    <div class="container">
+        @if (TempData["homepageMessage"] != null)
+        {
+            <div class="container">
+                <div class="alert alert-success alert-dismissable text-center">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @TempData["homepageMessage"]
+                </div>
+            </div>
+
+        }
+        <div class="card ">
+            <h4 class="card-header text-center">@SharedLocalizer["Change the tagline of the home page"]</h4>
+            <div class="card-block">
+                <form asp-action="MainAppHomePage" asp-controller="Admin" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Tagline" class="control-label"></label>
+                        <input asp-for="Tagline" class="form-control no-border" />
+                        <span asp-validation-for="Tagline" class="text-danger"></span>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" value="Create Tagline" class="btn btn-primary btn-raise " />
+                        <a asp-action="Dashboard" class="btn btn-danger btn-raise">@SharedLocalizer["Go Back"]</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

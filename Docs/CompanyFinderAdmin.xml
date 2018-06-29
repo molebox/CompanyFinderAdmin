@@ -1,0 +1,2137 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CompanyFinderAdmin</name>
+    </assembly>
+    <members>
+        <member name="T:CompanyFinderAdmin.Controllers.AdminController">
+            <summary>
+            Admin controller used to responed to login requests made from the home page
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Controllers.AdminController.EditCompId">
+            <summary>
+            Holds the company to edits id
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.#ctor(Microsoft.AspNetCore.Identity.UserManager{Microsoft.AspNetCore.Identity.IdentityUser},Microsoft.AspNetCore.Identity.SignInManager{Microsoft.AspNetCore.Identity.IdentityUser},CompanyFinderAdmin.Models.ICompanyRepository,DatabaseLibrary.Models.CompanyDbContext,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor for Admin Controller. Gets the context from the repo, also gets the context directly for use in certain methods
+            </summary>
+            <param name="userMgr"></param>
+            <param name="signInMgr"></param>
+            <param name="repo"></param>
+            <param name="context"></param>
+            <param name="Configuration"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.CompanyIndex(System.String,System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            GETs all the companies from the db and shows them in the view. The page size determines how many will be shown on each page.
+            </summary>
+            <param name="sortOrder"></param>
+            <param name="currentFilter"></param>
+            <param name="searchString"></param>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.Login">
+            <summary>
+            GET for the admin login view. Check the db to see if any admins exist, if not then set the usernam to default "admin" and prompt to change username and password.
+            If admin exists already then they can login as usual
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.Login(CompanyFinderAdmin.ViewModels.AdminViewModel,System.String)">
+            <summary>
+            Post method that checks the login for access to the search page. If login is good then the user is redirected to the search oage, if the login
+            is bad an error message is displayed
+            </summary>
+            <param name="adminViewModel"></param>
+            <param name="returnUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.Logout(System.String)">
+            <summary>
+            Logout method to close the session
+            </summary>
+            <param name="returnUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.IndustryFilter">
+            <summary>
+            GET for the Admin filter view
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.Dashboard">
+            <summary>
+            GET Admin dashboard where they can choose what they want to do
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.MainAppHomePage">
+            <summary>
+            GET to load the tagline from the db for the main apps home page
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.MainApphomePage(System.Int32,CompanyFinderAdmin.ViewModels.TagLineViewModel)">
+            <summary>
+            Post to add the tagline to the database
+            </summary>
+            <param name="id"></param>
+            <param name="tagLineViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.CreateTreeNodes">
+            <summary>
+            View to create the treview structure. The nodes are loaded from the api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.CreateTreeNodes(CompanyFinderAdmin.ViewModels.NodesToSend)">
+            <summary>
+            The Post back of the new treeview state, here the new nodes are added to the db via the api
+            </summary>
+            <param name="saveTreeViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.GetTreeNodes(System.String)">
+            <summary>
+            Get the tree nodes from the api
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.GetFocusNodesAsync(System.String)">
+            <summary>
+            Gets all the company focuses from the db via the repo and returns them to the view.
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.SaveTree(CompanyFinderAdmin.ViewModels.NodesToSend)">
+            <summary>
+            Posts the treeview to the api where it is added to the database
+            </summary>
+            <param name="saveTreeViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.CreateCompany">
+            <summary>
+            GET to create a new company. The Skills and Details are loaded from the api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.CreateCompany(CompanyFinderAdmin.ViewModels.CreateCompanyData)">
+            <summary>
+            POST to create a new company. An id check if first performed to see if the db is empty and/or to assign a new id to the new company.
+            3 tables are edited to create the new company = Companies-CompanySkills-CompanyDetails
+            </summary>
+            <param name="company"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.GetTreeNodesForEdit(System.Int32)">
+            <summary>
+            Get the tree nodes from the api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.GetTemplateTreeNodesForEdit(System.Int32)">
+            <summary>
+            Get the tree nodes from the api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.GetFocusNodesForEdit(System.Int32)">
+            <summary>
+            Get the tree nodes from the api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.GetTemplateFocusNodesForEdit(System.Int32)">
+            <summary>
+            Get the focus tree nodes from the api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.EditCompany(System.Int32)">
+            <summary>
+            GET for the admin company edit view. The company is found in api via its id, the corrasponding company is then found in the CompanySkills and CompanyDetails tables.
+            The values are passed to a view model and then sent to the view for editing.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.EditCompany(CompanyFinderAdmin.ViewModels.CreateCompanyData)">
+            <summary>
+            POST for the admin company edit view. The company data is sent to the api where the database is updated.
+            </summary>
+            <param name="companyToEdit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.AddFocus">
+            <summary>
+            GET for the add skills admin view. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.AddFocus(CompanyFinderAdmin.ViewModels.AddFocusViewModel)">
+            <summary>
+            POST to add new skills to the db. An id check if first performed to see if the db is empty and/or to assign a new id to the new skill.
+            </summary>
+            <param name="addFocusViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.IndexSkillsDetailsFocus">
+            <summary>
+            GET for the add skills and details admin view. The skills and details are loaded via the repo from the db and shown in a table format.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.EditFocus(System.Int32)">
+            <summary>
+            GET for the edit skill admin view. 
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.EditFocus(System.Int32,CompanyFinderAdmin.ViewModels.AddFocusViewModel)">
+            <summary>
+            POST for the edit skill admin view. The skills id is found in the db and its new values assigned.
+            </summary>
+            <param name="id"></param>
+            <param name="addFocusViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.DeleteFocus(System.Int32)">
+            <summary>
+            GET for the delete details admin view
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.DeleteFocusConfirmed(System.Int32)">
+            <summary>
+            POST for the confirmation to delete detail admin view. The details id is sent to the repo and located in the db, its then sent back to the repo to be deleted
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.DeleteCompany(System.Nullable{System.Int32})">
+            <summary>
+            GET for the admin delete company view. The companys id is sent to the repo and foudn in the db.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.DeleteCompanyConfirmed(System.Int32)">
+            <summary>
+            POST for the confirmation to delete company admin view. The companies id is sent to the repo and located in the db, its then sent back to the repo to be deleted
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.AdminController.SetLanguage(System.String,System.String)">
+            <summary>
+            Sets the languge
+            </summary>
+            <param name="culture"></param>
+            <param name="returnUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Controllers.TemplateController">
+            <summary>
+            Template controller for the company templates
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.#ctor(DatabaseLibrary.Models.CompanyDbContext,Microsoft.AspNetCore.Identity.UserManager{Microsoft.AspNetCore.Identity.IdentityUser},Microsoft.AspNetCore.Identity.SignInManager{Microsoft.AspNetCore.Identity.IdentityUser},CompanyFinderAdmin.Models.ICompanyRepository,CompanyFinderAdmin.Email.IEmailService,CompanyFinderAdmin.Infrastructure.IViewRenderService,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor DI
+            </summary>
+            <param name="context"></param>
+            <param name="userMgr"></param>
+            <param name="signInMgr"></param>
+            <param name="repo"></param>
+            <param name="emailService"></param>
+            <param name="viewRenderService"></param>
+            <param name="Configuration"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.TemplateLogin">
+            <summary>
+            GET for the tamplate page login
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.TemplateLogin(CompanyFinderAdmin.ViewModels.TemplateLoginViewModel)">
+            <summary>
+            POST to check the login, if successful then access is gained to the company template 
+            </summary>
+            <param name="templateLoginViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.ViewEditTemplate(System.Int32)">
+            <summary>
+            GET show the companies template ready for editing or approval
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.ViewEditTemplate(CompanyFinderAdmin.ViewModels.CreateTemplateData)">
+            <summary>
+            POST once template is approved the changes are pushed to the real db and the temp data deleted from the temp tables
+            </summary>
+            <param name="templateViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.GetTemplateTreeNodesForEdit(System.Int32)">
+            <summary>
+            Get the tree nodes from the api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.GetTemplateFocusNodesForEdit(System.Int32)">
+            <summary>
+            Get the tree nodes from the api
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.ThankYou">
+            <summary>
+            View to show after the template has been submitted, if the company tries to view the form again they are shown a thank you for submitting page
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.UnlockTemplate(System.Int32)">
+            <summary>
+            GET unlock the template for the company to edit
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.RemoveCompanyFromTempTable(System.Int32)">
+            <summary>
+            Remove the company from the temp company table
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.CompanyTemplate(System.Guid)">
+            <summary>
+            GET for the company template to be filled out by companies
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.SubmittedCompanyTemplate(CompanyFinderAdmin.ViewModels.CreateTemplateData)">
+            <summary>
+            POST to recieve the template form the company and save progress to db 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.DraftCompanyTemplate(CompanyFinderAdmin.ViewModels.CreateTemplateData)">
+            <summary>
+            POST to recieve the template form the company and save progress as a draft to db 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.TemplateStatus">
+            <summary>
+            GET's the companies from the temp company template table, loads the view which admin can send templates from
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.TemplateStatus(CompanyFinderAdmin.ViewModels.SendTemplateViewModel)">
+            <summary>
+            POST emails the template to the company and updates the temp comapny template table
+            </summary>
+            <param name="sendTemplate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.SendTemplateSummary(CompanyFinderAdmin.ViewModels.CreateTemplateData)">
+            <summary>
+            A Summary of the companies submitted information, to be sent as an email after submition of form.
+            </summary>
+            <param name="template"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.GetTreeNodes(System.String)">
+            <summary>
+            Get the tree nodes from the api
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Controllers.TemplateController.GetFocusNodesAsync(System.String)">
+            <summary>
+            Gets all the company focuses from the db via the repo and returns them to the view.
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Data.ApplicationDbContext">
+            <summary>
+            Default db context
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Data.ApplicationDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{CompanyFinderAdmin.Data.ApplicationDbContext})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Data.ApplicationDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            OnModelCreating
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="T:CompanyFinderAdmin.Data.Migrations.CreateIdentitySchema">
+            <summary>
+            Identity migration Default
+            </summary>
+            <summary>
+            Default identity model builder
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Data.Migrations.CreateIdentitySchema.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <summary>
+            Default Up
+            </summary>
+            <param name="migrationBuilder"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Data.Migrations.CreateIdentitySchema.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <summary>
+            Default down
+            </summary>
+            <param name="migrationBuilder"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Data.Migrations.CreateIdentitySchema.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            BuildTargetModel
+            </summary>
+            <param name="modelBuilder"></param>
+        </member>
+        <member name="T:CompanyFinderAdmin.Email.EmailAddress">
+            <summary>
+            Class to represent the email address
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailAddress.Name">
+            <summary>
+            The name 
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailAddress.Address">
+            <summary>
+            The address 
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Email.EmailConfiguration">
+            <summary>
+            Email config for getting the smtp data
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailConfiguration.SmtpServer">
+            <summary>
+            SmtpServer
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailConfiguration.SmtpPort">
+            <summary>
+            SmtpPort
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailConfiguration.SmtpUsername">
+            <summary>
+            SmtpUsername
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailConfiguration.SmtpPassword">
+            <summary>
+            SmtpPassword
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailConfiguration.PopServer">
+            <summary>
+            PopServer
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailConfiguration.PopPort">
+            <summary>
+            PopPort
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailConfiguration.PopUsername">
+            <summary>
+            PopUsername
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailConfiguration.PopPassword">
+            <summary>
+            PopPassword
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Email.EmailMessage">
+            <summary>
+            Class to describe an email
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Email.EmailMessage.#ctor">
+            <summary>
+            Constructor to initialize the lists of email addresses
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailMessage.ToAddresses">
+            <summary>
+            List of to addresses
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailMessage.FromAddresses">
+            <summary>
+            List of from addresses
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailMessage.Subject">
+            <summary>
+            Email subject
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.EmailMessage.Content">
+            <summary>
+            Email content
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Email.EmailService">
+            <summary>
+            Email service for sending emails
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Email.EmailService.#ctor(CompanyFinderAdmin.Email.IEmailConfiguration)">
+            <summary>
+            Constructor injecting the email configuration into the class
+            </summary>
+            <param name="emailConfiguration"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Email.EmailService.ReceiveEmail(System.Int32)">
+            <summary>
+            List of recived emails
+            </summary>
+            <param name="maxCount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Email.EmailService.Send(CompanyFinderAdmin.Email.EmailMessage)">
+            <summary>
+            Send an email
+            </summary>
+            <param name="emailMessage"></param>
+        </member>
+        <member name="T:CompanyFinderAdmin.Email.IEmailConfiguration">
+            <summary>
+            Interface for the smtp credentials
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.IEmailConfiguration.SmtpServer">
+            <summary>
+            SmtpServer
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.IEmailConfiguration.SmtpPort">
+            <summary>
+            SmtpPort
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.IEmailConfiguration.SmtpUsername">
+            <summary>
+            SmtpUsername
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.IEmailConfiguration.SmtpPassword">
+            <summary>
+            SmtpPassword
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.IEmailConfiguration.PopServer">
+            <summary>
+            PopServer
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.IEmailConfiguration.PopPort">
+            <summary>
+            PopPort
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.IEmailConfiguration.PopUsername">
+            <summary>
+            PopUsername
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Email.IEmailConfiguration.PopPassword">
+            <summary>
+            PopPassword
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Email.IEmailService">
+            <summary>
+            Emial service interface
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Email.IEmailService.Send(CompanyFinderAdmin.Email.EmailMessage)">
+            <summary>
+            Method to send an email
+            </summary>
+            <param name="emailMessage"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Email.IEmailService.ReceiveEmail(System.Int32)">
+            <summary>
+            List of recieved emails
+            </summary>
+            <param name="maxCount"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Services.EmailSenderExtensions">
+            <summary>
+            Extention email sender
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Services.EmailSenderExtensions.SendEmailConfirmationAsync(CompanyFinderAdmin.Services.IEmailSender,System.String,System.String)">
+            <summary>
+            Send email confirm boilerplate
+            </summary>
+            <param name="emailSender"></param>
+            <param name="email"></param>
+            <param name="link"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Services.EmailSender">
+            <summary>
+            Boilerplate -This class is used by the application to send email for account confirmation and password reset.
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Services.EmailSender.SendEmailAsync(System.String,System.String,System.String)">
+            <summary>
+            Send email async
+            </summary>
+            <param name="email"></param>
+            <param name="subject"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Services.IEmailSender">
+            <summary>
+            Boilerplate email interface
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Services.IEmailSender.SendEmailAsync(System.String,System.String,System.String)">
+            <summary>
+            Default emailing
+            </summary>
+            <param name="email"></param>
+            <param name="subject"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Infrastructure.IViewRenderService">
+            <summary>
+            Render View interface
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Infrastructure.IViewRenderService.RenderToStringAsync(System.String,System.Object)">
+            <summary>
+            RenderToStringAsync
+            </summary>
+            <param name="viewName"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper">
+            <summary>
+            Custom tag helper class that builds a pagination tag helper for switching pages depending on the amount of content
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.#ctor(Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory)">
+            <summary>
+            Page link constructor that takes the UrlHelperFactory interface as a parameter and initializes it.
+            </summary>
+            <param name="helperFactory"></param>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.ViewContext">
+            <summary>
+            View Context object
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.PageModel">
+            <summary>
+            Page info view model object
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.PageAction">
+            <summary>
+            Page action to indicate the action the page should call
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.PageClassesEnabled">
+            <summary>
+            Page classes bool
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.PageClass">
+            <summary>
+            Page class for btn
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.PageClassNormal">
+            <summary>
+            Page class property
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.PageClassSelected">
+            <summary>
+            Page class property
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Infrastructure.PageLinkTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <summary>
+            Custom tag helper to display item on a new page.
+            </summary>
+            <param name="tagHelperContext"></param>
+            <param name="output"></param>
+        </member>
+        <member name="T:CompanyFinderAdmin.Infrastructure.PaginatedList`1">
+            <summary>
+            Class to servoce pagination
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PaginatedList`1.PageIndex">
+            <summary>
+            The pages index
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PaginatedList`1.TotalPages">
+            <summary>
+            Total number of pages
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Infrastructure.PaginatedList`1.#ctor(System.Collections.Generic.List{`0},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Paginated list for sorting the page size
+            </summary>
+            <param name="items"></param>
+            <param name="count"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PaginatedList`1.HasPreviousPage">
+            <summary>
+            Previous page
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Infrastructure.PaginatedList`1.HasNextPage">
+            <summary>
+            Next page
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Infrastructure.PaginatedList`1.CreateAsync(System.Linq.IQueryable{`0},System.Int32,System.Int32)">
+            <summary>
+            The CreateAsync method in this code takes page size and page number and applies the appropriate Skip and Take statements to the IQueryable
+            </summary>
+            <param name="source"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Infrastructure.RandomUrl">
+            <summary>
+            Static class to generate random url - not used
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Infrastructure.RandomUrl.UniqueUrl">
+            <summary>
+            Generates random url - not used
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Infrastructure.ViewRenderService">
+            <summary>
+            Render view service
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Infrastructure.ViewRenderService.#ctor(Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine,Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataProvider,System.IServiceProvider,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Constructor DI
+            </summary>
+            <param name="razorViewEngine"></param>
+            <param name="tempDataProvider"></param>
+            <param name="serviceProvider"></param>
+            <param name="httpContextAccessor"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Infrastructure.ViewRenderService.RenderToStringAsync(System.String,System.Object)">
+            <summary>
+            Render view to string
+            </summary>
+            <param name="viewName"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.AccountViewModels.ExternalLoginViewModel">
+            <summary>
+            Boilerplate login view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.ExternalLoginViewModel.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.AccountViewModels.ForgotPasswordViewModel">
+            <summary>
+            Boilerplate forgot password view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.ForgotPasswordViewModel.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.AccountViewModels.LoginViewModel">
+            <summary>
+            Boilerplate login view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.LoginViewModel.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.LoginViewModel.Password">
+            <summary>
+            Password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.LoginViewModel.RememberMe">
+            <summary>
+            Remeber me
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.AccountViewModels.LoginWith2faViewModel">
+            <summary>
+            Boilerplate login view model two factor
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.LoginWith2faViewModel.TwoFactorCode">
+            <summary>
+            Two factor code
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.LoginWith2faViewModel.RememberMachine">
+            <summary>
+            Remember machine
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.LoginWith2faViewModel.RememberMe">
+            <summary>
+            Remember me
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.AccountViewModels.LoginWithRecoveryCodeViewModel">
+            <summary>
+            Boilerplate login recovery code view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.LoginWithRecoveryCodeViewModel.RecoveryCode">
+            <summary>
+            Recovery code
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.AccountViewModels.RegisterViewModel">
+            <summary>
+            Boilerplate register view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.RegisterViewModel.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.RegisterViewModel.Password">
+            <summary>
+            Password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.RegisterViewModel.ConfirmPassword">
+            <summary>
+            Confirm password
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.AccountViewModels.ResetPasswordViewModel">
+            <summary>
+            Boilerplate reset password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.ResetPasswordViewModel.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.ResetPasswordViewModel.Password">
+            <summary>
+            password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.ResetPasswordViewModel.ConfirmPassword">
+            <summary>
+            Confrim password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.AccountViewModels.ResetPasswordViewModel.Code">
+            <summary>
+            Code
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ApplicationUser">
+            <summary>
+            Boilerplate app user class
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.CompanyRepository">
+            <summary>
+            Repository for the company database
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.#ctor(DatabaseLibrary.Models.CompanyDbContext)">
+            <summary>
+            Company repo constructor which injects the db context for use in the repo
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetAllCompaniesFromTempTable">
+            <summary>
+            Gets all the companies from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.SaveCompanyDataToTemporaryTable(DatabaseLibrary.Models.TemporaryCompanyTemplate)">
+            <summary>
+            Saves the company data to the temporary company table
+            </summary>
+            <param name="temporaryCompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.CreateCompany(DatabaseLibrary.Models.Companies)">
+            <summary>
+            Creates a new company in the companies table in the db
+            </summary>
+            <param name="compToCreate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.DeleteCompanyFromDb(DatabaseLibrary.Models.Companies)">
+            <summary>
+            Delete the company from the db. The companies child elemets are first deleted from the CompanySkills and CompanyDetails tables.
+            Then the company is deleted from the companies table.
+            </summary>
+            <param name="selectedCompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.DeleteDetailFromDb(DatabaseLibrary.Models.SkillDetail)">
+            <summary>
+            Delete the detail from the db. The details are found via their ids and deleted from the ComapnyDetails table. They are then delete from the SkillDetail table
+            </summary>
+            <param name="selectedDetail"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.DeleteFocusFromDb(DatabaseLibrary.Models.Focus)">
+            <summary>
+            Delete the skill from the db. The skills are found via their ids and deleted from the ComapnySkills table. They are then delete from the Skillset table
+            </summary>
+            <param name="selectedFocus"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.DeleteSkillFromDb(DatabaseLibrary.Models.SkillSet)">
+            <summary>
+            Delete the skill from the db. The skills are found via their ids and deleted from the ComapnySkills table. They are then delete from the Skillset table
+            </summary>
+            <param name="selectedSkill"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.EditCompany(DatabaseLibrary.Models.Companies)">
+            <summary>
+            Updates the Companies table with the changes made.
+            </summary>
+            <param name="compToEdit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetAllCompanies">
+            <summary>
+            Gets all the companies from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetAllFocuses">
+            <summary>
+            Get all the focuses from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetAllSkillDetails">
+            <summary>
+            Get all the skill details from db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetAllSkills">
+            <summary>
+            Get all the skills from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetCompanyById(System.Nullable{System.Int32})">
+            <summary>
+            Get a specific company by its id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetDetailById(System.Int32)">
+            <summary>
+            Get a specific detail by its id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetFocusById(System.Int32)">
+            <summary>
+            Get a specific focus by its id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetHomePageInfo">
+            <summary>
+            Gets the home page info from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.CompanyRepository.GetSkillById(System.Int32)">
+            <summary>
+            Get a specific skill by its id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.Converter">
+            <summary>
+            Handles the Json Serializer settings
+            </summary>
+        </member>
+        <member name="F:CompanyFinderAdmin.Models.Converter.Settings">
+            <summary>
+            Statis method to set the Json Serializer settings
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ErrorViewModel">
+            <summary>
+            Boilerplate error view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ErrorViewModel.RequestId">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ErrorViewModel.ShowRequestId">
+            <summary>
+            Show id
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.FocusNodes">
+            <summary>
+            Focus Nodes
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.FocusNodes.Id">
+            <summary>
+            Node Id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.FocusNodes.Name">
+            <summary>
+            Node name
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.FocusNodes.ParentId">
+            <summary>
+            Parent id, can be null
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.FocusNodes.OrderNumber">
+            <summary>
+            Order number in the table
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.FocusNodes.Children">
+            <summary>
+            List of children nodes
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ICompanyRepository">
+            <summary>
+            Interface for the company repository
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetAllCompanies">
+            <summary>
+            Method to get all the companies from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetAllCompaniesFromTempTable">
+            <summary>
+            Method to get all the companies from the temp table in the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.SaveCompanyDataToTemporaryTable(DatabaseLibrary.Models.TemporaryCompanyTemplate)">
+            <summary>
+            Saves the company data to the temporary company table
+            </summary>
+            <param name="temporaryCompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetCompanyById(System.Nullable{System.Int32})">
+            <summary>
+            Get all the companies form the db via id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetSkillById(System.Int32)">
+            <summary>
+            Get all the skills from the db via id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetDetailById(System.Int32)">
+            <summary>
+            Get all the details from the db via id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetHomePageInfo">
+            <summary>
+            Get the home page info from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetFocusById(System.Int32)">
+            <summary>
+            Get all the Focuses from the db via id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetAllSkills">
+            <summary>
+            Get all the skills from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetAllSkillDetails">
+            <summary>
+            Get all the deatils from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.GetAllFocuses">
+            <summary>
+            Get all the focuses from the db
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.CreateCompany(DatabaseLibrary.Models.Companies)">
+            <summary>
+            Method to create a company
+            </summary>
+            <param name="compToCreate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.EditCompany(DatabaseLibrary.Models.Companies)">
+            <summary>
+            Method to edit a company
+            </summary>
+            <param name="compToEdit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.DeleteCompanyFromDb(DatabaseLibrary.Models.Companies)">
+            <summary>
+            Method to delete a company
+            </summary>
+            <param name="selectedCompany"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.DeleteSkillFromDb(DatabaseLibrary.Models.SkillSet)">
+            <summary>
+            Method to delete a skill
+            </summary>
+            <param name="selectedSkill"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.DeleteFocusFromDb(DatabaseLibrary.Models.Focus)">
+            <summary>
+            Method to delete a focus
+            </summary>
+            <param name="selectedFocus"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyFinderAdmin.Models.ICompanyRepository.DeleteDetailFromDb(DatabaseLibrary.Models.SkillDetail)">
+            <summary>
+            Method to delete a detail 
+            </summary>
+            <param name="selectedDetail"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ManageViewModels.ChangePasswordViewModel">
+            <summary>
+            Boilerplate change password viewmodel
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ChangePasswordViewModel.OldPassword">
+            <summary>
+            Old password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ChangePasswordViewModel.NewPassword">
+            <summary>
+            New password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ChangePasswordViewModel.ConfirmPassword">
+            <summary>
+            Confirm password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ChangePasswordViewModel.StatusMessage">
+            <summary>
+            Status message
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ManageViewModels.EnableAuthenticatorViewModel">
+            <summary>
+            Boilerplate enable auth
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.EnableAuthenticatorViewModel.Code">
+            <summary>
+            Code
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.EnableAuthenticatorViewModel.SharedKey">
+            <summary>
+            Sharedkey
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.EnableAuthenticatorViewModel.AuthenticatorUri">
+            <summary>
+            Auth url
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ManageViewModels.ExternalLoginsViewModel">
+            <summary>
+            External login view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ExternalLoginsViewModel.CurrentLogins">
+            <summary>
+            Current logins list
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ExternalLoginsViewModel.OtherLogins">
+            <summary>
+            Other logins
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ExternalLoginsViewModel.ShowRemoveButton">
+            <summary>
+            Remove button
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ExternalLoginsViewModel.StatusMessage">
+            <summary>
+            Status message
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ManageViewModels.IndexViewModel">
+            <summary>
+            Boilerplate index view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.IndexViewModel.Username">
+            <summary>
+            Username
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.IndexViewModel.IsEmailConfirmed">
+            <summary>
+            Email confirm
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.IndexViewModel.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.IndexViewModel.PhoneNumber">
+            <summary>
+            Phone number
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.IndexViewModel.StatusMessage">
+            <summary>
+            Status message
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ManageViewModels.RemoveLoginViewModel">
+            <summary>
+            Boilerplate Remove login view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.RemoveLoginViewModel.LoginProvider">
+            <summary>
+            Login provider
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.RemoveLoginViewModel.ProviderKey">
+            <summary>
+            Provider key
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ManageViewModels.SetPasswordViewModel">
+            <summary>
+            Boilerplate set password view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.SetPasswordViewModel.NewPassword">
+            <summary>
+            New password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.SetPasswordViewModel.ConfirmPassword">
+            <summary>
+            Confirm password
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.SetPasswordViewModel.StatusMessage">
+            <summary>
+            Status message
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ManageViewModels.ShowRecoveryCodesViewModel">
+            <summary>
+            Boilerplate Recovery code view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.ShowRecoveryCodesViewModel.RecoveryCodes">
+            <summary>
+            Recovery codes
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.ManageViewModels.TwoFactorAuthenticationViewModel">
+            <summary>
+            Boilerplate two factor view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.TwoFactorAuthenticationViewModel.HasAuthenticator">
+            <summary>
+            Has auth
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.TwoFactorAuthenticationViewModel.RecoveryCodesLeft">
+            <summary>
+            Recovery left
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.ManageViewModels.TwoFactorAuthenticationViewModel.Is2faEnabled">
+            <summary>
+            is enabled
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.State">
+            <summary>
+            State of node
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.State.Selected">
+            <summary>
+            Is the node checked
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Models.TreeNodes">
+            <summary>
+            The treeview nodes
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.TreeNodes.Id">
+            <summary>
+            The node id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.TreeNodes.Name">
+            <summary>
+            The node name
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.TreeNodes.ParentId">
+            <summary>
+            The nodes parent id, can be null
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.TreeNodes.OrderNumber">
+            <summary>
+            The nodes order number in the db
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.Models.TreeNodes.Children">
+            <summary>
+            The nodes children
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Program">
+            <summary>
+            Program class where the app begins
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Program.Main(System.String[])">
+            <summary>
+            Main method that runs on start up
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Program.BuildWebHost(System.String[])">
+            <summary>
+            Build app
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CompanyFinderAdmin.SharedResource">
+            <summary>
+            Dummy class required to create IStringLocalizer instance
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.Startup">
+            <summary>
+            Start up class that initializes middlewere
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:CompanyFinderAdmin.Startup.Configuration">
+            <summary>
+            Configuration
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:CompanyFinderAdmin.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+            <param name="serviceProvider"></param>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.AddDetailsViewModel">
+            <summary>
+            View model to represent the details model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AddDetailsViewModel.SkillDetailId">
+            <summary>
+            The detail id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AddDetailsViewModel.DetailName">
+            <summary>
+            The detail name
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.AddFocusViewModel">
+            <summary>
+            View model to represent the focus model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AddFocusViewModel.FocusId">
+            <summary>
+            Focus Id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AddFocusViewModel.FocusType">
+            <summary>
+            Focus Name
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.AddSkillsViewModel">
+            <summary>
+            View model to represent the skills model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AddSkillsViewModel.SkillId">
+            <summary>
+            Skill id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AddSkillsViewModel.SkillName">
+            <summary>
+            Skill name
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.AdminViewModel">
+            <summary>
+            Admin view model for the admin login
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AdminViewModel.AdminID">
+            <summary>
+            The admin id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AdminViewModel.AdminName">
+            <summary>
+            The Admin username
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.AdminViewModel.AdminPassword">
+            <summary>
+            The admin password
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel">
+            <summary>
+            Company Editor view model for creating and editing companies in the db
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.CompanyId">
+            <summary>
+            The company id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.CompanyName">
+            <summary>
+            The company name
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.ContactPerson">
+            <summary>
+            The contact person
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.Email">
+            <summary>
+            The contact email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.Bio">
+            <summary>
+            The company biography
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.Website">
+            <summary>
+            The company website address
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.Phone">
+            <summary>
+            The contact phone number
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.RecruitmentWebAddress">
+            <summary>
+            Company recruitment web address
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.Company">
+            <summary>
+            Company object to hold the actual company
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.SkillSetsList">
+            <summary>
+            List of the associated skillsets
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.SkillDetailsList">
+            <summary>
+            List of the associated details
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyEditorViewModel.FocusList">
+            <summary>
+            List of all the focuses
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.CompanyListViewModel">
+            <summary>
+            View model to return a list of companies for the search match
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyListViewModel.Companies">
+            <summary>
+            IEnummerable of companies
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyListViewModel.PagingInfo">
+            <summary>
+            Paging info view model object
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyListViewModel.SelectedSkillsFromSearch">
+            <summary>
+            List of the searched skills
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyListViewModel.SelectedDetailsFromSearch">
+            <summary>
+            List of the search details
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel">
+            <summary>
+            Company template view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.CompanyId">
+            <summary>
+            Company Id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.CompanyName">
+            <summary>
+            Company Name
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.ContactPerson">
+            <summary>
+            Contact Person
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.Email">
+            <summary>
+            Company Email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.Website">
+            <summary>
+            Company website
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.RecruitmentWebAddress">
+            <summary>
+            Company Recruitment website address
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.Bio">
+            <summary>
+            Company Biography
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.Phone">
+            <summary>
+            Company Phone Number
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.OtherNotes">
+            <summary>
+            Any other information the company wantes to give
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.IsSubmitted">
+            <summary>
+            Is template Submitted
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.Locked">
+            <summary>
+            Is tmeplate submitted
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.SkillSetsList">
+            <summary>
+            List of the associated skillsets
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.SkillDetailsList">
+            <summary>
+            List of the associated details
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.FocusList">
+            <summary>
+            List of all the focuses
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.EmailToSend">
+            <summary>
+            Email object
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.EmailAddressToSend">
+            <summary>
+            Email address to send to
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CompanyTemplateViewModel.UniqueUrl">
+            <summary>
+            Templates unique guid
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.CreateCompanyData">
+            <summary>
+            ViewModel for the created company info
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.CompanyId">
+            <summary>
+            The company id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.CompanyName">
+            <summary>
+            The company name
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.ContactPerson">
+            <summary>
+            The contact person
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.Email">
+            <summary>
+            The contact email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.Bio">
+            <summary>
+            The company biography
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.Website">
+            <summary>
+            The company website address
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.Phone">
+            <summary>
+            The contact phone number
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.RecruitmentWebAddress">
+            <summary>
+            Company recruitment web address
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.CheckedRolesNodes">
+            <summary>
+            List of the checked nodes ids
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateCompanyData.CheckedFocusNodes">
+            <summary>
+            List of the checked nodes ids
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.CompanyId">
+            <summary>
+            The company id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.CompanyName">
+            <summary>
+            The company name
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.ContactPerson">
+            <summary>
+            The contact person
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.Email">
+            <summary>
+            The contact email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.Bio">
+            <summary>
+            The company biography
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.Website">
+            <summary>
+            The company website address
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.Phone">
+            <summary>
+            The contact phone number
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.RecruitmentWebAddress">
+            <summary>
+            Company recruitment web address
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.OtherNotes">
+            <summary>
+            Any other information the company wantes to give
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.CheckedRolesNodes">
+            <summary>
+            List of the checked nodes ids
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.CheckedFocusNodes">
+            <summary>
+            List of the checked nodes ids
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.Locked">
+            <summary>
+            Is tmeplate submitted
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.UniqueUrl">
+            <summary>
+            Templates unique guid
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.CreateTreeNodesViewModel">
+            <summary>
+            View Model for creating the treeview nodes
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTreeNodesViewModel.TreeNodesList">
+            <summary>
+            List of tree nodes
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.CreateTreeNodesViewModel.TreeNodes">
+            <summary>
+            The new tree node
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.FocusNodeViewModel">
+            <summary>
+            Focus view model for the focus tree view
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodeViewModel.Text">
+            <summary>
+            The name of the focus node
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodeViewModel.Id">
+            <summary>
+            The focus tree node id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodeViewModel.ParentId">
+            <summary>
+            The nodes parents id, can be null. The root node is null
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodeViewModel.OrderNumber">
+            <summary>
+            The order of the node levels
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodeViewModel.Children">
+            <summary>
+            List of the children nodes
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.FocusNodesWithStateViewModel">
+            <summary>
+            Focus view model with state
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodesWithStateViewModel.Id">
+            <summary>
+            Node Id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodesWithStateViewModel.Text">
+            <summary>
+            Node name
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodesWithStateViewModel.ParentId">
+            <summary>
+            Parent id, can be null
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodesWithStateViewModel.OrderNumber">
+            <summary>
+            Order number in the table
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodesWithStateViewModel.Children">
+            <summary>
+            List of children nodes
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.FocusNodesWithStateViewModel.State">
+            <summary>
+            State of the node
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.NodesToSend">
+            <summary>
+            View model to hold the created tree view
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.NodesToSend.TreeNodesList">
+            <summary>
+            List of tree nodes
+            </summary>       
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.NodesToSend.FocusNodesList">
+            <summary>
+            List of tree nodes
+            </summary>       
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.PagingInfoViewModel">
+            <summary>
+            Page info view model used to show/set items on a page
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.PagingInfoViewModel.TotalItems">
+            <summary>
+            The total items on a page
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.PagingInfoViewModel.ItemsPerPage">
+            <summary>
+            Sets how many items are allowed on a page
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.PagingInfoViewModel.CurrentPage">
+            <summary>
+            The current page number
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.PagingInfoViewModel.TotalPages">
+            <summary>
+            Method to set how many pages there should be given how many items there are in total
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.SendTemplateViewModel">
+            <summary>
+            Send template view model
+            </summary>
+        </member>
+        <member name="M:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.CompanyName">
+            <summary>
+            Company Name
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.Email">
+            <summary>
+            Company Email
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.EmailMessage">
+            <summary>
+            Email object
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.FromEmail">
+            <summary>
+            The from email address that will be shown to the receiver
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.EmailSubject">
+            <summary>
+            The Email subject
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.EmailContent">
+            <summary>
+            The Email subject
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.EmailAddressToSend">
+            <summary>
+            Email Address to send to
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.UniqueUrl">
+            <summary>
+            Unique Url for template link
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.CompanyList">
+            <summary>
+            A list of the companies that the template has been sent to
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.PagingInfo">
+            <summary>
+            Paging info view model object
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.CompanyGuid">
+            <summary>
+            The companies unique guid
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.Link">
+            <summary>
+            The template link that is emailed to the company
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SendTemplateViewModel.RecruitmentWebAddress">
+            <summary>
+            Company recruitment web address
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.SkillsDetailsFocusListViewModel">
+            <summary>
+            View model for the admin skills and details view. Used when viewing all the skills and details in the db
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SkillsDetailsFocusListViewModel.SkillSets">
+            <summary>
+            IEnummeration of the skill sets
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SkillsDetailsFocusListViewModel.SkillDetails">
+            <summary>
+            IEnummeration of the details
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SkillsDetailsFocusListViewModel.Focuses">
+            <summary>
+            IEnummeration of the focuses
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.SkillsDetailsFocusListViewModel.PagingInfo">
+            <summary>
+            Page info opbject
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.TagLineViewModel">
+            <summary>
+            View model to represent the homepage tagline
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TagLineViewModel.Id">
+            <summary>
+            Tagline Id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TagLineViewModel.Tagline">
+            <summary>
+            Tagline for the home page
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.TemplateLoginViewModel">
+            <summary>
+            Template login view model 
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TemplateLoginViewModel.TemplateAccessID">
+            <summary>
+            The admin id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TemplateLoginViewModel.CompanyAccessName">
+            <summary>
+            The Admin username
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TemplateLoginViewModel.CompanyAccessPassword">
+            <summary>
+            The admin password
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.TreeNodesViewModel">
+            <summary>
+            View model for the treeview
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesViewModel.Text">
+            <summary>
+            The name of the node
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesViewModel.Id">
+            <summary>
+            The tree node id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesViewModel.ParentId">
+            <summary>
+            The nodes parents id, can be null. The root node is null
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesViewModel.OrderNumber">
+            <summary>
+            The order of the node levels
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesViewModel.Children">
+            <summary>
+            List of the children nodes
+            </summary>
+        </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.TreeNodesWithStateViewModel">
+            <summary>
+            tree nodes with state view model
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesWithStateViewModel.Text">
+            <summary>
+            The name of the node
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesWithStateViewModel.Id">
+            <summary>
+            The tree node id
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesWithStateViewModel.ParentId">
+            <summary>
+            The nodes parents id, can be null. The root node is null
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesWithStateViewModel.OrderNumber">
+            <summary>
+            The order of the node levels
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesWithStateViewModel.Children">
+            <summary>
+            List of the children nodes
+            </summary>
+        </member>
+        <member name="P:CompanyFinderAdmin.ViewModels.TreeNodesWithStateViewModel.State">
+            <summary>
+            State of the node
+            </summary>
+        </member>
+    </members>
+</doc>

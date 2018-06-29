@@ -1,0 +1,440 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+@inject IHtmlLocalizer<SharedResource> SharedHtmlLocalizer
+@using CompanyFinderAdmin
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/themes/proton/style.min.css" />
+</head>
+
+<div class="allPagesBackground" style="height:100%" margin:2em;">
+
+    <form asp-controller="Admin" asp-action="CreateTreeNodes" data-ajax="true" data-ajax-method="POST" id="nodeForm">
+        <div class="container">
+            <div class="createNodes-wrapper" style="padding:3em;">
+                <div class="card btn-raise">
+                    <h6 class="text-center">@SharedLocalizer["Roles"]</h6>
+                    <hr />
+                    <div id="tree"></div>
+                </div>
+                <div class="card btn-raise">
+                    <h6 class="text-center">@SharedLocalizer["Focus"]</h6>
+                    <hr />
+                    <div id="tree_focus"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="container">
+            <div class="card text-center btn-raise">
+                <div class="card-block">
+                    <p class=" lead"><strong>@SharedLocalizer["Right click on a node to create, rename or delete. You can also drag and drop the nodes into place."]</strong></p>
+                    <button class="btn btn-primary btn-raise" id="btnSave">@SharedLocalizer["Save tree and push to database"]</button>
+                    <a asp-action="Dashboard" class="btn btn-danger btn-raise">@SharedLocalizer["Back to dashboard"]</a>
+                </div>
+
+            </div>
+        </div>
+        <hr />
+
+        <div class="container collapse" id="saved">
+            <div class="alert alert-success alert-dismissable text-center">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @SharedLocalizer["Tree successfully saved to database!"]
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+@*<script src="~/lib/jquery/dist/jquery.js"></script>*@
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //The treeview data
+        var treeData = [];
+        var focusData = [];
+
+
+        $('#tree').jstree({
+            'plugins': ['contextmenu', 'dnd', 'unique', 'types'],
+            'core': {
+                "check_callback": true,
+                'data': {
+                    "url": "/Admin/GetTreeNodes",
+                    "dataType": "json" // needed only if you do not supply JSON headers
+                },
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+                'types':
+                    {
+                        "1": { "max_depth": 2 }
+                    },
+            }
+        });
+        $('#tree').on("ready.jstree", function (e, data) {
+
+            //var jsonNodes = $('#tree').jstree(true).get_json('#', { flat: true });
+            //treeData = GetRoles(jsonNodes);
+        });
+
+        $('#tree').on("delete_node.jstree", function (e, data) {
+            //Get the tree as json
+            var jsonNodes = $('#tree').jstree(true).get_json('#', { flat: true });
+            //jsonNodes = remove(jsonNodes, data.node.id);
+            treeData = GetRoles(jsonNodes);
+        });
+        $('#tree').on('select_node.jstree', function (e, data) {
+
+        });
+        $('#tree').on('rename_node.jstree', function (e, data) {
+
+            //Get the node
+            var node = $('#tree').jstree(true).get_node(data.node.id);
+
+            //Get the tree as json
+            var jsonNodes = $('#tree').jstree(true).get_json('#', { flat: true });
+
+            treeData = GetRoles(jsonNodes);
+        });
+        $('#tree').on('create_node.jstree', function (e, data) {
+
+            var jsonNodes = $('#tree').jstree(true).get_json('#', { flat: true });
+
+            //Get the last element from the tree
+            var last_element = jsonNodes[jsonNodes.length - 1];
+            //Add 1
+            var tempId = last_element.id++;
+            var id = tempId.toString();
+            //Copy the node
+            var node = $.extend(true, {}, data.node);
+            node.name = node.text;
+            node.parentId = data.node.parent;
+
+            //Remove the auto generated id tag
+            var idWithoutJs = node.id.split("j1_").pop();
+            console.log(node.id);
+
+            $('#tree').jstree(true).set_id(node, idWithoutJs.toString());
+
+            //console.log(tempNewNode);
+            var jsTree = $('#tree').jstree(true).get_json('#', { flat: true });
+            treeData = GetRoles(jsTree);
+
+        });
+        $('#tree').on('changed.jstree', function (e, data) {
+
+        });
+
+        //Create an instance of the tree
+        var tree = $('#tree').jstree();
+
+        //Function to get the nodes and thier children
+        function GetRoles(rolesArray) {
+            var tempArray = [];
+            for (var i = 0; i < rolesArray.length; i++) {
+
+                //Get the level/orderNumber of the node
+                var level = $("#tree").jstree("get_path", rolesArray[i]).length;
+
+                // Create each node
+                var tempObj = {
+                    Name: '',
+                    Id: 0,
+                    ParentId: 0,
+                    OrderNumber: 0,
+                    Children: []
+                };
+
+                // Assign the temp node
+                tempObj.Name = rolesArray[i].text;
+                tempObj.Id = Number(rolesArray[i].id);
+                tempObj.ParentId = Number(rolesArray[i].parent);
+                if (tempObj.ParentId == null) {
+                    tempObj.ParentId = tempObj.ParentId ? tempObj.ParentId : 0;
+                }
+                tempObj.OrderNumber = level;
+
+                //Call the recursive function to get the child nodes
+                getAllChildren(tree, tempObj.Id, tempObj.Children);
+
+                //Remove the first element from the child array which is its self
+                tempObj.Children.shift();
+                tempArray.push(tempObj);
+            }
+            return tempArray;
+        }
+        //Recursive function to go through the node and gets its children
+        function getAllChildren(treeObj, nodeId, childArray) {
+
+            //Get the node via the passed in node id
+            var node = treeObj.get_node(nodeId);
+
+            //Get the level/orderNumber of the node
+            var level = $("#tree").jstree("get_path", node.parent).length;
+
+            // Create each node
+            var tempObj = {
+                Name: '',
+                Id: 0,
+                ParentId: 0,
+                OrderNumber: 0,
+                Children: []
+            };
+
+            // Assign the temp node
+            tempObj.Name = node.text;
+            tempObj.Id = Number(node.id);
+            tempObj.ParentId = Number(node.parent);
+            tempObj.OrderNumber = level;
+            if (tempObj.ParentId == null) {
+                tempObj.ParentId = tempObj.ParentId ? tempObj.ParentId : 0;
+            }
+
+            // Push the temp node to the passed in child nodes children array
+            childArray.push(tempObj);
+
+            //If the node has children then loop though them and call the function again until the children are added to each nodes child array
+            if (node.children != null) {
+                if (node.children.length) {
+                    for (var i = 0; i < node.children.length; i++) {
+                        tempObj.Children = remove(tempObj.Children, node.children[i]);
+                        getAllChildren(treeObj, node.children[i], childArray);
+                    }
+                }
+            }
+        }
+
+        $('#tree_focus').jstree({
+            'plugins': ['contextmenu', 'dnd', 'unique', 'types'],
+            'core': {
+                "check_callback": true,
+                'data': {
+                    "url": "/Admin/GetFocusNodesAsync",
+                    "dataType": "json" // needed only if you do not supply JSON headers
+                },
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+                'types':
+                    {
+                        "1": { "max_depth": 2 }
+                    },
+            }
+        });
+        $('#tree_focus').on("ready.jstree", function (e, data) {
+
+        });
+        $('#tree_focus').on("delete_node.jstree", function (e, data) {
+            //Get the tree as json
+            var jsonNodes = $('#tree_focus').jstree(true).get_json('#', { flat: true });
+            focusData = GetFocus(jsonNodes);
+        });
+        $('#tree_focus').on('select_node.jstree', function (e, data) {
+
+        });
+        $('#tree_focus').on('rename_node.jstree', function (e, data) {
+
+            //Get the node
+            var node = $('#tree_focus').jstree(true).get_node(data.node.id);
+
+            //Get the tree as json
+            var jsonNodes = $('#tree_focus').jstree(true).get_json('#', { flat: true });
+
+            focusData = GetFocus(jsonNodes);
+        });
+        $('#tree_focus').on('create_node.jstree', function (e, data) {
+
+            var jsonNodes = $('#tree_focus').jstree(true).get_json('#', { flat: true });
+
+            //Get the last element from the tree
+            var last_element = jsonNodes[jsonNodes.length - 1];
+
+            //Add 1
+            var tempId = last_element.id++;
+            var id = tempId.toString();
+
+            var node = $.extend(true, {}, data.node);
+            node.name = node.text;
+            node.parentId = data.node.parent;
+
+            //Remove the autop generated id tag
+            var idWithoutJ1 = node.id.split("j2_").pop();
+            console.log(idWithoutJ1);
+
+            $('#tree_focus').jstree(true).set_id(node, idWithoutJ1.toString());
+
+            //console.log(tempNewNode);
+            var jsTree = $('#tree_focus').jstree(true).get_json('#', { flat: true });
+            focusData = GetFocus(jsTree);
+        });
+        $('#tree_focus').on('changed.jstree', function (e, data) {
+
+        });
+
+        //Create an instance of the tree
+        var treeFocus = $('#tree_focus').jstree();
+
+        //Function to get the nodes and thier children
+        function GetFocus(focusArray) {
+
+            var tempArray = [];
+            for (var i = 0; i < focusArray.length; i++) {
+
+                //Get the level/orderNumber of the node
+                var level = $("#tree_focus").jstree("get_path", focusArray[i]).length;
+                //console.log(level);
+                // Create each node
+                var tempObj = {
+                    Name: '',
+                    Id: 0,
+                    ParentId: 0,
+                    OrderNumber: 0,
+                    Children: []
+                };
+
+                // Assign the temp node
+                tempObj.Name = focusArray[i].text;
+                tempObj.Id = Number(focusArray[i].id);
+                tempObj.ParentId = Number(focusArray[i].parent);
+                if (tempObj.ParentId == null) {
+                    tempObj.ParentId = tempObj.ParentId ? tempObj.ParentId : 0;
+                }
+                tempObj.OrderNumber = level;
+
+                //Call the recursive function to get the child nodes
+                getAllFocusChildren(treeFocus, tempObj.Id, tempObj.Children);
+
+                //Remove the first element from the child array which is its self
+                tempObj.Children.shift();
+                tempArray.push(tempObj);
+            }
+            return tempArray;
+        }
+        //Recursive function to go through the node and gets its children
+        function getAllFocusChildren(treeObj, nodeId, childArray) {
+
+            //Get the node via the passed in node id
+            var node = treeObj.get_node(nodeId);
+
+            //Get the level/orderNumber of the node
+            var level = $("#tree_focus").jstree("get_path", node.parent).length;
+
+            // Create each node
+            var tempObj = {
+                Name: '',
+                Id: 0,
+                ParentId: 0,
+                OrderNumber: 0,
+                Children: []
+            };
+
+            // Assign the temp node
+            tempObj.Name = node.text;
+            tempObj.Id = Number(node.id);
+            tempObj.ParentId = Number(node.parent);
+            tempObj.OrderNumber = level;
+            if (tempObj.ParentId == null) {
+                tempObj.ParentId = tempObj.ParentId ? tempObj.ParentId : 0;
+            }
+
+            // Push the temp node to the passed in child nodes children array
+            childArray.push(tempObj);
+
+            //If the node has children then loop though them and call the function again until the children are added to each nodes child array
+            if (node.children != null) {
+                if (node.children.length) {
+                    for (var i = 0; i < node.children.length; i++) {
+                        tempObj.Children = remove(tempObj.Children, node.children[i]);
+                        getAllFocusChildren(treeObj, node.children[i], childArray);
+                    }
+                }
+            }
+        }
+
+
+        // Remove element from the array
+        function remove(array, elementToRemove) {
+            return array.filter(e => e !== elementToRemove);
+        }
+
+        function refresh() {
+
+            setTimeout(function () {
+                location.reload()
+            }, 100);
+        }
+
+        $('#btnSave').click(function (e) {
+            //console.log($('#tree').jstree(true).last_error());
+            //console.log("Fired");
+            //Get the tree nodes
+            var jsonRoleNodes = $('#tree').jstree(true).get_json('#', { flat: true });
+            //Get the tree nodes
+            var jsonFocusNodes = $('#tree_focus').jstree(true).get_json('#', { flat: true });
+            //console.log(jsonNodes);
+
+            //array to add to object which will be sent via ajax
+            var nodesRoles = [];
+            var nodesFocus = [];
+
+            // Put each element into the new array to be sent
+            jsonRoleNodes.forEach(function (item) {
+                // loop through the objects node array and add each object to the array
+                nodesRoles.push(item);
+            });
+
+            var tempRoles = GetRoles(nodesRoles);
+
+            // Put each element into the new array to be sent
+            jsonFocusNodes.forEach(function (item) {
+                // loop through the objects node array and add each object to the array
+                nodesFocus.push(item);
+            });
+
+            var tempFocus = GetFocus(nodesFocus);
+
+            //Object to send with node array
+            var NodesToSend = {
+                TreeNodesList: tempRoles,
+                FocusNodesList: tempFocus
+            };
+            //console.log(NodesToSend);
+
+            e.preventDefault();
+
+            //Send the array to the server
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/Admin/CreateTreeNodes",
+                //contentType: "application/json",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(NodesToSend),
+                success: (function (data) {
+                    console.log(data);
+                    $('#saved').hide().fadeIn(1000);
+                }),
+                error: function () {
+
+                }
+            });
+        });
+    });
+</script>
+
+

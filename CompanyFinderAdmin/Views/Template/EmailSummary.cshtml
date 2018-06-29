@@ -1,0 +1,60 @@
+﻿@model CompanyTemplateViewModel
+
+
+    <div class="container">
+        <h3 class="text-center">Thank you for submitting your companies information.</h3>
+        <hr />
+        <div class="row">
+            <div class="col-12">
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Company name: </strong>@Model.CompanyName</li>
+                    <li class="list-group-item"><strong>Contact person: </strong>@Model.ContactPerson</li>
+                    <li class="list-group-item"><strong>Email: </strong>@Model.Email</li>
+                    <li class="list-group-item"><strong>Phone: </strong>@Model.Phone</li>
+                    <li class="list-group-item"><strong>Website: </strong>@Model.Website</li>
+                    <li class="list-group-item"><strong>Recuitment website address: </strong>@Model.RecruitmentWebAddress</li>
+                    <li class="list-group-item"><strong>Biography: </strong>@Model.Bio</li>
+                    <li class="list-group-item"><strong>Other notes: </strong>@Model.OtherNotes</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <h5 class="text-center">Roles</h5>
+                <ul>
+                    @foreach (var skill in Model.SkillSetsList)
+                    {
+                        <li>@skill.SkillName</li>
+                    }
+                </ul>
+            </div>
+            <div class="col-4">
+                <h5 class="text-center">Languages</h5>
+                <ul>
+                    @foreach (var detail in Model.SkillDetailsList)
+                    {
+                        <li>@detail.DetailName</li>
+                    }
+                </ul>
+            </div>
+            <div class="col-4">
+                <h5 class="text-center">Focus</h5>
+                <ul>
+                    @foreach (var focus in Model.FocusList)
+                    {
+                        <li>@focus.FocusType</li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <hr />
+        <div class="text-center">
+            <h5>If you would like to make any chnages please contact admin</h5>
+        </div>
+
+
+    </div>
+
+
+

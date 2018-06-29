@@ -1,0 +1,139 @@
+﻿@*@model CompanyListViewModel*@
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+@using CompanyFinderAdmin.Infrastructure
+
+@model PaginatedList<DatabaseLibrary.Models.Companies>
+
+@inject IHtmlLocalizer<SharedResource> SharedHtmlLocalizer
+@using CompanyFinderAdmin
+
+<div class="allPagesBackground" style="height:100%" margin:2em;">
+    <h3 class="display-4 text-center">@SharedLocalizer["Pick a company to edit or delete"]</h3>
+    <br />
+
+    <div class="container">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" id="Search" placeholder="@SharedLocalizer["Search Company"]" class="form-control" />
+            </div>
+        </div>
+
+        <br />
+        <div class="container">
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            @SharedLocalizer["Company ID"]
+                        </th>
+                        <th>
+                            @SharedLocalizer["Company Name"]
+                        </th>
+                        <th>
+                            @SharedLocalizer["Contact Person"]
+                        </th>
+                        <th>
+                            @SharedLocalizer["Email"]
+                        </th>
+                        <th>
+                            @SharedLocalizer["Website"]
+                        </th>
+                        <th>
+                            @SharedLocalizer["Phone"]
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="Search">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompanyId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompanyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Website)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Phone)
+                            </td>
+                            <td></td>
+                            <td>
+                                <a asp-action="EditCompany" asp-route-id="@item.CompanyId" class="btn btn-sm btn-primary">Edit</a>
+                                <a asp-action="DeleteCompany" asp-route-id="@item.CompanyId" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="Dashboard" class="btn btn-danger btn-raise" style="margin:1em;"> @SharedLocalizer["Go Back"]</a>
+
+        <a asp-action="CompanyIndex"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-default @prevDisabled">
+            @SharedLocalizer["Previous"]
+        </a>
+        <a asp-action="CompanyIndex"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-default @nextDisabled">
+            @SharedLocalizer["Next"]
+        </a>
+
+        <br />
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        function Contains(text_one, text_two) {
+            if (text_one.indexOf(text_two) != -1)
+                return true;
+        }
+
+        $("#Search").keyup(function () {
+            var searchText = $("#Search").val().toLowerCase();
+            $(".Search").each(function () {
+                if (!Contains($(this).text().toLowerCase(), searchText)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+        });
+
+    });
+
+</script>
+
+
+

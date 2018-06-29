@@ -1,0 +1,188 @@
+﻿@model SendTemplateViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+@inject IHtmlLocalizer<SharedResource> SharedHtmlLocalizer
+@using CompanyFinderAdmin
+@{
+    ViewData["Title"] = "Templates Status";
+}
+<div class="standardBackground allPagesBackground">
+    <div class="container">
+        @if (TempData["message"] != null)
+        {
+            <div class="container">
+                <div class="alert alert-success alert-dismissable text-center">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @TempData["message"]
+                </div>
+            </div>
+
+        }
+        else if (TempData["errorMessage"] != null)
+        {
+            <div class="container">
+                <div class="alert alert-danger alert-dismissable text-center">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @TempData["errorMessage"]
+                </div>
+            </div>
+        }
+        <div class="container" style="margin: 0 auto; width:90%;">
+            <h5>@SharedLocalizer["Send a template to a company"]</h5>
+            <div class="form-row">
+                <form class="form-inline" asp-action="TemplateStatus" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-info btn-raise mb-2 mr-sm-2 mb-sm-0" data-toggle="modal" data-target="#exampleModal">Email Settings</button>
+                        <input asp-for="CompanyName" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="@SharedLocalizer["To - Company name"]" />
+                        <span asp-validation-for="CompanyName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Email" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="@SharedLocalizer["To - Email address"]" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group" style="margin-left: 7em">
+                        <input type="submit" value="Send template" class="btn btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0" />
+                        <a asp-action="Dashboard" asp-controller="Admin" class="btn btn-danger btn-raise mb-2 mr-sm-2 mb-sm-0">@SharedLocalizer["Go Back"]</a>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Choose email subject and content</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input asp-for="EmailSubject" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="@SharedLocalizer["Email subject"]" />
+                                        <span asp-validation-for="EmailSubject" class="text-danger"></span>
+                                    </div>
+                                    <div class="input-group" style="margin-top: 1em">
+                                        <textarea asp-for="EmailContent" maxlength="2000" type="text" rows="5" class="form-control" placeholder="@SharedLocalizer["Email content"]"></textarea>
+                                        <span asp-validation-for="EmailContent" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+
+                                    <button type="button" class="btn btn-danger btn-raise mb-2 mr-sm-2 mb-sm-0" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group" style="margin: 0 auto; width:90%;">
+            <div class="input-group">
+                <input type="text" id="Search" placeholder="@SharedLocalizer["Search a company"]" class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="card container btn-raise" style="margin: 0 auto; width:90%; height:500px; overflow:auto;">
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            @SharedLocalizer["Company Name"]
+                        </th>
+                        <th class="text-center">
+                            @SharedLocalizer["Email"]
+                        </th>
+                        <th class="text-center">
+                            @SharedLocalizer["Sent"]
+                        </th>
+                        <th class="text-center">
+                            @SharedLocalizer["Received"]
+                        </th>
+                        <th class="text-center">
+                            @SharedLocalizer["Unlock Template"]
+                        </th>
+                        <th class="text-center">
+                            @SharedLocalizer["Edit Template"]
+                        </th>
+                        <th class="text-center">
+                            @SharedLocalizer["Remove"]
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CompanyList)
+                    {
+                        <tr class="Search">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompanyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sent_at)
+                            </td>
+                            <td>
+                                @if (item.Received_at == null)
+                                {
+                                    @Html.Raw("Not Recieved")
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.Received_at)
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (item.Received_at != null && item.Locked == true)
+                                {
+                                    <a asp-action="UnlockTemplate" asp-controller="Template" asp-route-id="@item.CompanyId" class="btn btn-sm btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0">@SharedLocalizer["Unlock"]</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="UnlockTemplate" asp-controller="Template" asp-route-id="@item.CompanyId" class="btn btn-sm btn-primary btn-raise disabled mb-2 mr-sm-2 mb-sm-0">@SharedLocalizer["Locked"]</a>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="ViewEditTemplate" asp-controller="Template" asp-route-id="@item.CompanyId" class="btn btn-sm btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0">@SharedLocalizer["Edit"]</a>
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="RemoveCompanyFromTempTable" asp-controller="Template" asp-route-id="@item.CompanyId" class="btn btn-sm btn-danger">@SharedLocalizer["Remove"]</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        function Contains(text_one, text_two) {
+            if (text_one.indexOf(text_two) != -1)
+                return true;
+        }
+
+        $("#Search").keyup(function () {
+            var searchText = $("#Search").val().toLowerCase();
+            $(".Search").each(function () {
+                if (!Contains($(this).text().toLowerCase(), searchText)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+        });
+
+    });
+
+</script>
+

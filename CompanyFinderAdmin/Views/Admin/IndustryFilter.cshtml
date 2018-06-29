@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+@inject IHtmlLocalizer<SharedResource> SharedHtmlLocalizer
+@using CompanyFinderAdmin
+
+@*<div class="allPagesBackground">*@
+<div class="standardBackground allPagesBackground">
+    <div class="standard-container">
+        <div class="card">
+            <h5 class="card-header">@SharedLocalizer["Select Industry"]</h5>
+            <div class="card-block">
+                <div class="list-group">
+                    <a class="list-group-item active"
+                       asp-action="Dashboard" asp-controller="Admin">@SharedLocalizer["Information Technology"]</a>
+                    <a href="#" class="list-group-item list-group-item-action disabled">@SharedLocalizer["Healthcare"]</a>
+                    <a href="#" class="list-group-item list-group-item-action disabled">@SharedLocalizer["Construction"]</a>
+                    <a href="#" class="list-group-item list-group-item-action disabled">Retail</a>
+                    <a href="#" class="list-group-item list-group-item-action disabled">Finance</a>
+                    <a class="list-group-item active"
+                       asp-controller="Admin" asp-action="Logout">@SharedLocalizer["Logout"]</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+@*</div>*@

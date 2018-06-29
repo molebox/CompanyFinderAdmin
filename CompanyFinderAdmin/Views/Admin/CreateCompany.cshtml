@@ -1,0 +1,183 @@
+﻿@model CompanyEditorViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+@inject IHtmlLocalizer<SharedResource> SharedHtmlLocalizer
+@using CompanyFinderAdmin
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/themes/proton/style.min.css" />
+</head>
+<div class="allPagesBackground" style="height:100%;">
+    <form asp-action="CreateCompany" asp-controller="Admin" method="post">
+        <div class="create-wrapper" style="padding:2em;">
+            <div class="card">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="CompanyName" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Company Name"]</label>
+                    <input asp-for="CompanyName" type="text" maxlength="50" class="form-control no-border" id="companyName" />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ContactPerson" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Contact Person"]</label>
+                    <input asp-for="ContactPerson" type="text" maxlength="40" class="form-control no-border" id="companyContact" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Email Address"]</label>
+                    <input asp-for="Email" type="email" maxlength="100" class="form-control no-border" id="companyEmail" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Bio" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Short Biography"]</label>
+                    <textarea asp-for="Bio" type="text" maxlength="1000" class="form-control no-border" rows="3" aria-describedby="bioHelp" id="companyBio"></textarea>
+                    <small id="bioHelp" class="form-text text-muted">@SharedLocalizer["Use no more than 1000 characters"]</small>
+                    <span asp-validation-for="Bio" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Website" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Company Website"]</label>
+                    <input asp-for="Website" type="text" maxlength="50" class="form-control no-border" id="companyWebsite" />
+                    <span asp-validation-for="Website" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RecruitmentWebAddress" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Recruitment Website"]</label>
+                    <input asp-for="RecruitmentWebAddress" type="text" maxlength="50" class="form-control no-border" id="companyRecruitment" />
+                    <span asp-validation-for="RecruitmentWebAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Contact Phone Number"]</label>
+                    <input asp-for="Phone" type="text" maxlength="10" class="form-control no-border" id="companyPhone" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-inline">
+                    <input type="submit" value="Create" class="btn btn-primary btn-raise" style="margin:1em;" id="btnSave" />
+                    <a asp-action="Dashboard" class="btn btn-danger btn-raise">@SharedLocalizer["Back to dashboard"]</a>
+                </div>
+            </div>
+            <div class="card">
+                <div id="tree_roles"></div>
+            </div>
+            <div class="card">
+                <div id="tree_focus"></div>
+            </div>
+        </div>
+    </form>
+    <div class="container collapse" id="saved">
+        <div class="alert alert-success alert-dismissable text-center">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            @SharedLocalizer["Company successfully saved to database!"]
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#tree_roles').jstree({
+            'plugins': ['contextmenu', 'unique', 'checkbox'],
+            'core': {
+                "check_callback": true,
+                'data': {
+                    "url": "/Admin/GetTreeNodes",
+                    "dataType": "json" // needed only if you do not supply JSON headers
+                },
+                'checkbox': {
+                    'three_state': false,
+                    'cascade': 'up'
+                },
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+            }
+        });
+        $('#tree_focus').jstree({
+            'plugins': ['contextmenu', 'unique', 'checkbox'],
+            'core': {
+                "check_callback": true,
+                'data': {
+                    "url": "/Admin/GetFocusNodesAsync",
+                    "dataType": "json" // needed only if you do not supply JSON headers
+                },
+                'checkbox': {
+                    'three_state': false,
+                    'cascade': 'up'
+                },
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+            }
+        });
+
+        $('#btnSave').click(function (e) {
+
+            //Get the input values
+            var compName = $("#companyName").val();
+            var compContact = $("#companyContact").val();
+            var compEmail = $("#companyEmail").val();
+            var compBio = $("#companyBio").val();
+            var compWebsite = $("#companyWebsite").val();
+            var compPhone = $("#companyPhone").val();
+            var compRecruitment = $('#companyRecruitment').val();
+
+            //Get the checked checkbox ids
+            var rolesCheckbox_ids = $('#tree_roles').jstree(true).get_selected();
+            //Get the checked checkbox ids
+            var focusCheckbox_ids = $('#tree_focus').jstree(true).get_selected();
+            console.log(focusCheckbox_ids);
+
+            //Get the intermediate state checkboxes - the skills if only children are selected
+            $("#tree_roles").find(".jstree-undetermined").each(function (i, element) {
+
+                var id = $(element).closest('.jstree-node').attr("id");
+                rolesCheckbox_ids.push(id);
+            });
+
+            //Create the object to send
+            var CreateCompanyData = {
+
+                CompanyName: compName,
+                ContactPerson: compContact,
+                Email: compEmail,
+                Bio: compBio,
+                Website: compWebsite,
+                Phone: compPhone,
+                RecruitmentWebAddress: compRecruitment,
+                CheckedRolesNodes: rolesCheckbox_ids,
+                CheckedFocusNodes: focusCheckbox_ids
+            };
+
+            e.preventDefault();
+
+            //Send the array to the server
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/Admin/CreateCompany",
+                //contentType: "application/json",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(CreateCompanyData),
+                success: (function (data) {
+                    console.log(data);
+                    $('#saved').hide().fadeIn(1000);
+
+                }),
+                error: function () {
+
+                }
+            });
+        });
+    });
+</script>
+
+
+

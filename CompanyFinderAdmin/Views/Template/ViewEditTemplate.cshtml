@@ -1,0 +1,399 @@
+﻿@model CreateTemplateData
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResource> SharedLocalizer
+@inject IHtmlLocalizer<SharedResource> SharedHtmlLocalizer
+@using CompanyFinderAdmin
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/themes/proton/style.min.css" />
+</head>
+
+<div style="margin:2em;">
+    <form id="templateForm">
+        <div class="create-wrapper">
+            <div class="card">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="CompanyName" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Company Name"]</label>
+                    <input asp-for="CompanyName" type="text" maxlength="50" class="form-control no-border" id="companyName" />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ContactPerson" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Contact Person"]</label>
+                    <input asp-for="ContactPerson" type="text" maxlength="40" class="form-control no-border" id="companyContact" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Email Address"]</label>
+                    <input asp-for="Email" type="email" maxlength="100" class="form-control no-border" id="companyEmail" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Bio" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Short Biography"]</label>
+                    <textarea asp-for="Bio" type="text" maxlength="1000" class="form-control no-border" rows="3" aria-describedby="bioHelp" id="companyBio"></textarea>
+                    <small id="bioHelp" class="form-text text-muted">@SharedLocalizer["Use no more than 1000 characters"]</small>
+                    <span asp-validation-for="Bio" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Website" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Company Website"]</label>
+                    <input asp-for="Website" type="text" maxlength="50" class="form-control no-border" id="companyWebsite" />
+                    <span asp-validation-for="Website" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RecruitmentWebAddress" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Recruitment Website"]</label>
+                    <input asp-for="RecruitmentWebAddress" type="text" maxlength="50" class="form-control no-border" id="companyRecruitment" />
+                    <span asp-validation-for="RecruitmentWebAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label bmd-label-floating primary-text-color">@SharedLocalizer["Contact Phone Number"]</label>
+                    <input asp-for="Phone" type="text" maxlength="10" class="form-control no-border" id="companyPhone" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OtherNotes" class="control-label"></label>
+                    <textarea asp-for="OtherNotes" maxlength="1000" class="form-control" rows="2" id="otherNotes"></textarea>
+                    <small id="bioHelp" class="form-text text-muted">Use no more than 1000 characters</small>
+                    <span asp-validation-for="OtherNotes" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div id="tree_roles"></div>
+            </div>
+            <div class="card">
+                <div id="tree_focus"></div>
+            </div>
+
+        </div>
+        <div class="form-group text-center" style="margin:0.5em;">
+            <input type="submit" value="Approve and push to database" id="btnSave" class="btn btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0" />
+
+            <input type="button" onclick="resetForm()" value="Undo changes" class="btn btn-info btn-raise mb-2 mr-sm-2 mb-sm-0" />
+            <a asp-action="TemplateStatus" asp-controller="Template" class="btn btn-danger btn-raise mb-2 mr-sm-2 mb-sm-0">Go Back</a>
+            <hr />
+        </div>
+        @if (TempData["pushToDatabaseMessage"] != null)
+        {
+            <div class="container">
+                <div class="alert alert-success alert-dismissable text-center">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @TempData["pushToDatabaseMessage"]
+                </div>
+            </div>
+
+        }
+
+    </form>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script type="text/javascript">
+
+    function resetForm() {
+        document.getElementById("templateForm").reset();
+    }
+
+    $(document).ready(function () {
+
+        //Array to hold the companies checked data
+        var treeNodeData = [];
+        //Get the model
+        var model = @Html.Raw(Json.Serialize(Model));
+        //Get the companies Id
+        var compId = model.companyId;
+
+        $('#tree_roles').jstree({
+            'plugins': ['contextmenu', 'unique', 'checkbox'],
+            'core': {
+                "check_callback": true,
+                "data": function (node, cb) {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            url: "/Template/GetTemplateTreeNodesForEdit",
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            data: JSON.stringify(compId),
+                        }).done(function (data) {
+                            console.log(data);
+                            cb(data);
+                        });
+                },
+                'checkbox': {
+                    'three_state': false,
+                    'cascade': 'up',
+                    'tie_selection': false
+                },
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+            }
+        });
+
+        $('#tree_focus').jstree({
+            'plugins': ['contextmenu', 'unique', 'checkbox'],
+            'core': {
+                "check_callback": true,
+                "data": function (node, cb) {
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: "/Template/GetTemplateFocusNodesForEdit",
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(compId),
+                    }).done(function (data) {
+                        console.log(data);
+                        cb(data);
+                    });
+                },
+                'checkbox': {
+                    'three_state': false,
+                    'cascade': 'up',
+                    'tie_selection': false
+                },
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+            }
+        });
+
+        //Create an instance of the tree
+        var treeFocus = $('#tree_focus').jstree();
+        //console.log(treeFocus);
+
+        $('#btnSave').click(function (e) {
+
+            //Get the input values
+            var compName = $("#companyName").val();
+            var compContact = $("#companyContact").val();
+            var compEmail = $("#companyEmail").val();
+            var compBio = $("#companyBio").val();
+            var compWebsite = $("#companyWebsite").val();
+            var compPhone = $("#companyPhone").val();
+            var compRecruitment = $('#companyRecruitment').val();
+            var compOtherNotes = $('#otherNotes').val();
+
+            //Get the checked checkbox ids
+            var rolesCheckbox_ids = $('#tree_roles').jstree(true).get_selected();
+            //Get the checked checkbox ids
+            var focusCheckbox_ids = $('#tree_focus').jstree(true).get_selected();
+            //console.log(focusCheckbox_ids);
+
+            //Get the intermediate state checkboxes - the skills if only children are selected
+            $("#tree_roles").find(".jstree-undetermined").each(function (i, element) {
+
+                var id = $(element).closest('.jstree-node').attr("id");
+                rolesCheckbox_ids.push(id);
+            });
+
+            //Create the object to send
+            var CreateCompanyData = {
+
+                CompanyId: compId,
+                CompanyName: compName,
+                ContactPerson: compContact,
+                Email: compEmail,
+                Bio: compBio,
+                Website: compWebsite,
+                Phone: compPhone,
+                OtherNotes: compOtherNotes,
+                RecruitmentWebAddress: compRecruitment,
+                CheckedRolesNodes: rolesCheckbox_ids,
+                CheckedFocusNodes: focusCheckbox_ids
+            };
+            console.log(CreateCompanyData);
+
+            e.preventDefault();
+
+            //Send the array to the server
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/Template/ViewEditTemplate",
+                //contentType: "application/json",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(CreateCompanyData),
+                success: (function (data) {
+                    console.log(data);
+                    $('#saved').hide().fadeIn(1000);
+                }),
+                error: function () {
+
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@model CreateCompanyData
+
+    <div style="margin:1em;">
+        <form class="form-horizontal" id="templateForm">
+            <div class="template-wrapper">
+
+
+                <div class="card">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="@Model.UniqueUrl" type="hidden" value="@Model.UniqueUrl" />
+                    <div class="form-group">
+                        <label asp-for="CompanyName" class="control-label"></label>
+                        <input asp-for="CompanyName" class="form-control" />
+                        <span asp-validation-for="CompanyName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ContactPerson" class="control-label"></label>
+                        <input asp-for="ContactPerson" class="form-control" />
+                        <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Website" class="control-label"></label>
+                        <input asp-for="Website" class="form-control" />
+                        <span asp-validation-for="Website" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="RecruitmentWebAddress" class="control-label"></label>
+                        <input asp-for="RecruitmentWebAddress" class="form-control" />
+                        <small class="form-text text-muted">Provide the link to your recuitment page</small>
+                        <span asp-validation-for="RecruitmentWebAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Bio" class="control-label"></label>
+                        <textarea asp-for="Bio" maxlength="1000" class="form-control" rows="4"></textarea>
+                        <small class="form-text text-muted">Describe your company using no more than 1000 characters</small>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Phone" class="control-label"></label>
+                        <input asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="OtherNotes" class="control-label"></label>
+                        <textarea asp-for="OtherNotes" maxlength="1000" class="form-control" rows="4"></textarea>
+                        <small id="bioHelp" class="form-text text-muted">Use no more than 1000 characters</small>
+                        <span asp-validation-for="OtherNotes" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <input type="submit" value="Approve and push to database" formaction="/Template/ViewEditTemplate" formmethod="post" class="btn btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0" />
+
+                        <input type="button" onclick="resetForm()" value="Undo changes" class="btn btn-info btn-raise mb-2 mr-sm-2 mb-sm-0" />
+                        <a asp-action="TemplateStatus" asp-controller="Template" class="btn btn-danger btn-raise mb-2 mr-sm-2 mb-sm-0">Go Back</a>
+                        <hr />
+                        @if (TempData["message"] != null)
+                        {
+                            <div class="container">
+                                <div class="alert alert-success alert-dismissable text-center">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    @TempData["message"]
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+
+                </div>
+
+                <div class="template-nested">
+                    <div>
+                        <h6 class="text-center" style="padding:1em;">Role</h6>
+                        @for (int i = 0; i < Model.SkillSetsList.Count(); i++)
+                        {
+                            <div class="form-check">
+                                <label class="custom-control custom-checkbox" id="Skill_@Model.SkillSetsList[i].SkillId">
+                                    <input class="form-check-input custom-control-input accent-color" id="Skill_@Model.SkillSetsList[i].SkillId" type="checkbox" asp-for="@Model.SkillSetsList[i].IsSelected">
+                                    <span class="custom-control-indicator cardBorder"></span>
+                                    <span class="custom-control-description primary-text-color checkboxFont">@Html.DisplayFor(x => Model.SkillSetsList[i].SkillName)</span>
+                                    @Html.HiddenFor(x => x.SkillSetsList[i].SkillId)
+                                    @Html.HiddenFor(x => x.SkillSetsList[i].SkillName)
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <h6 class="text-center" style="padding:1em;">Language</h6>
+                        @for (int i = 0; i < Model.SkillDetailsList.Count; i++)
+                        {
+                            <div class="form-check">
+                                <label class="custom-control custom-checkbox" id="Skill_@Model.SkillDetailsList[i].SkillDetailId">
+                                    <input class="form-check-input custom-control-input accent-color" id="Skill_@Model.SkillDetailsList[i].SkillDetailId" type="checkbox" asp-for="@Model.SkillDetailsList[i].IsSelected">
+                                    <span class="custom-control-indicator cardBorder"></span>
+                                    <span class="custom-control-description primary-text-color checkboxFont">@Html.DisplayFor(x => Model.SkillDetailsList[i].DetailName)</span>
+                                    @Html.HiddenFor(x => x.SkillDetailsList[i].SkillDetailId)
+                                    @Html.HiddenFor(x => x.SkillDetailsList[i].DetailName)
+                                </label>
+                            </div>
+
+                        }
+                    </div>
+                    <div>
+                        <h6 class="text-center" style="padding:1em;">Focus</h6>
+                        @for (int i = 0; i < Model.FocusList.Count; i++)
+                        {
+                            <div class="form-check">
+                                <label class="custom-control custom-checkbox" id="Focus_@Model.FocusList[i].FocusId">
+                                    <input class="form-check-input custom-control-input accent-color" id="Focus_@Model.FocusList[i].FocusId" type="checkbox" asp-for="@Model.FocusList[i].IsSelected">
+                                    <span class="custom-control-indicator cardBorder"></span>
+                                    <span class="custom-control-description primary-text-color checkboxFont">@Html.DisplayFor(x => Model.FocusList[i].FocusType)</span>
+                                    @Html.HiddenFor(x => x.FocusList[i].FocusId)
+                                    @Html.HiddenFor(x => x.FocusList[i].FocusType)
+                                </label>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script>
+        function resetForm() {
+            document.getElementById("templateForm").reset();
+        }
+
+    </script>*@
+
+
