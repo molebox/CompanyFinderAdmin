@@ -369,12 +369,12 @@ namespace CompanyFinderAdmin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["message"] = $"Your information has been saved as a draft! You can continue to edit before submitting.";
+                    TempData["templateMessage"] = $"Your information has been saved as a draft! You can continue to edit before submitting.";
                     return View("CompanyTemplate", templateData);
                 }
                 else
                 {
-                    TempData["message"] = $"Error saving {templateData.CompanyName}. Please check your fields.";
+                    TempData["templateMessage"] = $"Error saving {templateData.CompanyName}. Please check your fields.";
                     return View("CompanyTemplate", templateData);
                 }
             }
