@@ -28,17 +28,9 @@ namespace CompanyFinderAdmin.Models
         /// </summary>
         public int OrderNumber { get; set; }
         /// <summary>
-        /// The nodes parent
-        /// </summary>
-        //public virtual TreeNodes Parent { get; set; }
-        /// <summary>
         /// The nodes children
         /// </summary>
         public virtual List<TreeNodes> Children { get; set; }
-        /// <summary>
-        /// State of the node
-        /// </summary>
-        //public State State { get; set; }
 
     }
    

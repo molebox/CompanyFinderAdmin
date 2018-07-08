@@ -69,12 +69,14 @@ namespace CompanyFinderAdmin
 
             services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
 
+            services.AddMemoryCache();
+            services.AddSession();
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             }).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, options => options.ResourcesPath = "Resources")
-              .AddDataAnnotationsLocalization();
+              .AddDataAnnotationsLocalization().AddSessionStateTempDataProvider();
 
             services.Configure<RequestLocalizationOptions>(
             opts =>
@@ -211,7 +213,7 @@ namespace CompanyFinderAdmin
 
             var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(options.Value);
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
 

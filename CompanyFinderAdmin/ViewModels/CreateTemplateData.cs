@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CompanyFinderAdmin.ViewModels
 {
+    /// <summary>
+    /// Create a company template properties
+    /// </summary>
     public class CreateTemplateData
     {
         /// <summary>

@@ -159,11 +159,11 @@ namespace CompanyFinderAdmin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["pushToDatabaseMessage"] = $"{templateViewModel.CompanyName} has been added to the database.";
+                    ViewBag.PushCompany = $"{templateViewModel.CompanyName} has been added to the database.";
                 }
                 else
                 {
-                    TempData["pushToDatabaseMessage"] = $"Error saving {templateViewModel.CompanyName}. Please check your fields.";
+                    ViewBag.PushCompany = $"Error saving {templateViewModel.CompanyName}. Please check your fields.";
                 }
             }
 
@@ -224,8 +224,6 @@ namespace CompanyFinderAdmin.Controllers
         [AllowAnonymous]
         public IActionResult ThankYou()
         {
-            //IMPLEMENT THE VIEW
-
             return View();
         }
 
@@ -317,7 +315,6 @@ namespace CompanyFinderAdmin.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmittedCompanyTemplate([FromBody]CreateTemplateData templateData)
         {
-
             var dataToSend = new StringContent(JsonConvert.SerializeObject(templateData), Encoding.UTF8, "application/json");
             using (var client = new HttpClient())
             {
@@ -333,13 +330,13 @@ namespace CompanyFinderAdmin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["templateMessage"] = $"Your information has been successfully sent!";
+                    ViewBag.SubmitTemplate = $"Success sending {templateData.CompanyName}!";
                     SendTemplateSummary(templateData);
-                    return View("CompanyTemplate", templateData);
+                    return RedirectToAction("ThankYou");
                 }
                 else
                 {
-                    TempData["templateMessage"] = $"Error sending {templateData.CompanyName}. Please check your fields.";
+                    ViewBag.SubmitTemplate = $"Error sending {templateData.CompanyName}. Please check your fields.";
                     return View("CompanyTemplate", templateData);
                 }
             }
