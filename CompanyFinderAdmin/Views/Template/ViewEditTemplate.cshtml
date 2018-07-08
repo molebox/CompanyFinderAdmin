@@ -75,12 +75,12 @@
             <a asp-action="TemplateStatus" asp-controller="Template" class="btn btn-danger btn-raise mb-2 mr-sm-2 mb-sm-0">Go Back</a>
             <hr />
         </div>
-        @if (!string.IsNullOrEmpty(ViewBag.PushCompany))
+        @if (ViewData["PushCompany"] != null)
         {
             <div class="container">
                 <div class="alert alert-success alert-dismissable text-center">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    @ViewBag.PushCompany
+                    @ViewData["PushCompany"]
                 </div>
             </div>
 

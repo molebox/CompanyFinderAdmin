@@ -159,11 +159,11 @@ namespace CompanyFinderAdmin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    ViewBag.PushCompany = $"{templateViewModel.CompanyName} has been added to the database.";
+                    ViewData["PushCompany"] = $"{templateViewModel.CompanyName} has been added to the database.";
                 }
                 else
                 {
-                    ViewBag.PushCompany = $"Error saving {templateViewModel.CompanyName}. Please check your fields.";
+                    ViewData["PushCompany"] = $"Error saving {templateViewModel.CompanyName}. Please check your fields.";
                 }
             }
 
@@ -330,13 +330,14 @@ namespace CompanyFinderAdmin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    ViewBag.SubmitTemplate = $"Success sending {templateData.CompanyName}!";
-                    SendTemplateSummary(templateData);
+                    //ViewData["SubmitTemplate"] = $"Success sending {templateData.CompanyName}!";
+                    //SendTemplateSummary(templateData);
+                    //return View("CompanyTemplate");
                     return RedirectToAction("ThankYou");
                 }
                 else
                 {
-                    ViewBag.SubmitTemplate = $"Error sending {templateData.CompanyName}. Please check your fields.";
+                    ViewData["SubmitTemplate"] = $"Error sending {templateData.CompanyName}. Please check your fields.";
                     return View("CompanyTemplate", templateData);
                 }
             }
