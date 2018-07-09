@@ -55,23 +55,22 @@
                 </div>
             </div>
 
-                <div class="card">
-                    <div id="tree_roles"></div>
-                </div>
-                    <div class="card">
-                        <div id="tree_focus"></div>
-                    </div>
+            <div class="card">
+                <div id="tree_roles"></div>
+            </div>
+            <div class="card">
+                <div id="tree_focus"></div>
+            </div>
         </div>
+       
         <div class="form-group text-center" style="padding:0.5em;">
-            @if (ViewData["SubmitTemplate"] != null)
-            {
-                <div class="container">
-                    <div class="alert alert-success alert-dismissable text-center">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        @ViewData["SubmitTemplate"]
-                    </div>
+            <div class="container">
+                <div class="alert alert-success alert-dismissable text-center" id="saved">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    Company successfully submitted!
                 </div>
-            }
+            </div>
+
             <input type="submit" value="Submit template" id="submitBtn" class="btn btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0" />
             @*<input type="submit" value="Save as draft" id="draftBtn" class="btn btn-info btn-raise mb-2 mr-sm-2 mb-sm-0" />*@
             <input type="button" onclick="resetForm()" value="Undo changes" class="btn btn-danger btn-raise mb-2 mr-sm-2 mb-sm-0" />
@@ -89,6 +88,8 @@
     }
 
     $(document).ready(function () {
+
+        $('#saved').hide();
 
         $('#tree_roles').jstree({
             'plugins': ['contextmenu', 'unique', 'checkbox'],
@@ -186,14 +187,15 @@
                 data: JSON.stringify(CreateTemplateData),
                 success: (function (data) {
                     console.log(data);
-                    $('#saved').hide().fadeIn(1000);
-                    location.reload(true);
+                    $('#saved').show().fadeIn(1000);
 
                 }),
                 error: function () {
 
                 }
             });
+            $('#saved').show().fadeIn(1000);
+            //window.location.reload(true);
         });
 
         $('#draftBtn').click(function (e) {

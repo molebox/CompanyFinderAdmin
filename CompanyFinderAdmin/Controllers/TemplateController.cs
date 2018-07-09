@@ -331,7 +331,7 @@ namespace CompanyFinderAdmin.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     //ViewData["SubmitTemplate"] = $"Success sending {templateData.CompanyName}!";
-                    //SendTemplateSummary(templateData);
+                    SendTemplateSummary(templateData);
                     //return View("CompanyTemplate");
                     return RedirectToAction("ThankYou");
                 }
