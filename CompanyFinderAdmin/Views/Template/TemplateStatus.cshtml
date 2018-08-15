@@ -102,9 +102,9 @@
                         <th class="text-center">
                             @SharedLocalizer["Received"]
                         </th>
-                        <th class="text-center">
+                        @*<th class="text-center">
                             @SharedLocalizer["Unlock Template"]
-                        </th>
+                        </th>*@
                         <th class="text-center">
                             @SharedLocalizer["Edit Template"]
                         </th>
@@ -136,7 +136,7 @@
                                     @Html.DisplayFor(modelItem => item.Received_at)
                                 }
                             </td>
-                            <td class="text-center">
+                            @*<td class="text-center">
                                 @if (item.Received_at != null && item.Locked == true)
                                 {
                                     <a asp-action="UnlockTemplate" asp-controller="Template" asp-route-id="@item.CompanyId" class="btn btn-sm btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0">@SharedLocalizer["Unlock"]</a>
@@ -145,7 +145,7 @@
                                 {
                                     <a asp-action="UnlockTemplate" asp-controller="Template" asp-route-id="@item.CompanyId" class="btn btn-sm btn-primary btn-raise disabled mb-2 mr-sm-2 mb-sm-0">@SharedLocalizer["Locked"]</a>
                                 }
-                            </td>
+                            </td>*@
                             <td class="text-center">
                                 <a asp-action="ViewEditTemplate" asp-controller="Template" asp-route-id="@item.CompanyId" class="btn btn-sm btn-primary btn-raise mb-2 mr-sm-2 mb-sm-0">@SharedLocalizer["Edit"]</a>
                             </td>
