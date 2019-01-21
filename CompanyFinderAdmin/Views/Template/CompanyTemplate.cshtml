@@ -98,7 +98,8 @@
                 'data': {
                     "type": "GET",
                     "url": "/Template/GetTreeNodes",
-                    "dataType": "json" // needed only if you do not supply JSON headers
+                    "dataType": "json", // needed only if you do not supply JSON headers
+                    'crossDomain': 'true',
                 },
                 'checkbox': {
                     'three_state': false,
@@ -117,7 +118,8 @@
                 'data': {
                     "type": "GET",
                     "url": "/Template/GetFocusNodesAsync",
-                    "dataType": "json" // needed only if you do not supply JSON headers
+                    "dataType": "json", // needed only if you do not supply JSON headers
+                    'crossDomain': 'true',
                 },
                 'checkbox': {
                     'three_state': false,

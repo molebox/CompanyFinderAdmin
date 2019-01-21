@@ -530,6 +530,7 @@ namespace CompanyFinderAdmin.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<JsonResult> GetTreeNodes(string query)
         {
             // Tree nodes from db
@@ -576,6 +577,7 @@ namespace CompanyFinderAdmin.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<JsonResult> GetFocusNodesAsync(string query)
         {
             List<FocusNodes> focusNodes;
