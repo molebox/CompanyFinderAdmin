@@ -159,11 +159,11 @@ namespace CompanyFinderAdmin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["pushToDatabaseMessage"] = $"{templateViewModel.CompanyName} has been added to the database.";
+                    ViewData["PushCompany"] = $"{templateViewModel.CompanyName} has been added to the database.";
                 }
                 else
                 {
-                    TempData["pushToDatabaseMessage"] = $"Error saving {templateViewModel.CompanyName}. Please check your fields.";
+                    ViewData["PushCompany"] = $"Error saving {templateViewModel.CompanyName}. Please check your fields.";
                 }
             }
 
@@ -224,8 +224,6 @@ namespace CompanyFinderAdmin.Controllers
         [AllowAnonymous]
         public IActionResult ThankYou()
         {
-            //IMPLEMENT THE VIEW
-
             return View();
         }
 
@@ -317,7 +315,6 @@ namespace CompanyFinderAdmin.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmittedCompanyTemplate([FromBody]CreateTemplateData templateData)
         {
-
             var dataToSend = new StringContent(JsonConvert.SerializeObject(templateData), Encoding.UTF8, "application/json");
             using (var client = new HttpClient())
             {
@@ -333,13 +330,14 @@ namespace CompanyFinderAdmin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["templateMessage"] = $"Your information has been successfully sent!";
+                    //ViewData["SubmitTemplate"] = $"Success sending {templateData.CompanyName}!";
                     SendTemplateSummary(templateData);
-                    return View("CompanyTemplate", templateData);
+                    //return View("CompanyTemplate");
+                    return RedirectToAction("ThankYou");
                 }
                 else
                 {
-                    TempData["templateMessage"] = $"Error sending {templateData.CompanyName}. Please check your fields.";
+                    ViewData["SubmitTemplate"] = $"Error sending {templateData.CompanyName}. Please check your fields.";
                     return View("CompanyTemplate", templateData);
                 }
             }
@@ -369,12 +367,12 @@ namespace CompanyFinderAdmin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["message"] = $"Your information has been saved as a draft! You can continue to edit before submitting.";
+                    TempData["templateMessage"] = $"Your information has been saved as a draft! You can continue to edit before submitting.";
                     return View("CompanyTemplate", templateData);
                 }
                 else
                 {
-                    TempData["message"] = $"Error saving {templateData.CompanyName}. Please check your fields.";
+                    TempData["templateMessage"] = $"Error saving {templateData.CompanyName}. Please check your fields.";
                     return View("CompanyTemplate", templateData);
                 }
             }
@@ -532,6 +530,7 @@ namespace CompanyFinderAdmin.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<JsonResult> GetTreeNodes(string query)
         {
             // Tree nodes from db
@@ -578,6 +577,7 @@ namespace CompanyFinderAdmin.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<JsonResult> GetFocusNodesAsync(string query)
         {
             List<FocusNodes> focusNodes;

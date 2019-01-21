@@ -48,6 +48,19 @@ namespace CompanyFinderAdmin
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
             services.AddMvc();
 
             services.AddDbContext<CompanyDbContext>(options =>
@@ -69,12 +82,14 @@ namespace CompanyFinderAdmin
 
             services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
 
+            services.AddMemoryCache();
+            services.AddSession();
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             }).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, options => options.ResourcesPath = "Resources")
-              .AddDataAnnotationsLocalization();
+              .AddDataAnnotationsLocalization().AddSessionStateTempDataProvider();
 
             services.Configure<RequestLocalizationOptions>(
             opts =>
@@ -205,13 +220,17 @@ namespace CompanyFinderAdmin
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            // ---- enable CORS for requests from anywhere ----
+            app.UseCors(cors => cors.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
 
+
             var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(options.Value);
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
 

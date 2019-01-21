@@ -1748,6 +1748,11 @@
             List of the checked nodes ids
             </summary>
         </member>
+        <member name="T:CompanyFinderAdmin.ViewModels.CreateTemplateData">
+            <summary>
+            Create a company template properties
+            </summary>
+        </member>
         <member name="P:CompanyFinderAdmin.ViewModels.CreateTemplateData.CompanyId">
             <summary>
             The company id
