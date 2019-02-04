@@ -3,8 +3,8 @@
 A website that enables an admin to control the database. The user can add edit and delete elements from the database tables.
 
 #### Built with:
-* .NET Core 2.0
-* Entity Framework Core 2.0
+* .NET Core 2.1
+* Entity Framework Core 2.1
 * Bootstrap 4
 
 #### Setup:
